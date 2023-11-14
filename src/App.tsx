@@ -1,13 +1,19 @@
-import { ChakraProvider } from "@chakra-ui/react";
+// chakra
+import { ChakraBaseProvider } from "@chakra-ui/react";
 
 // theme
 import { theme } from "@/assets/theme";
 
+// components
+import { GlobalErrorBoundary } from "@/components";
+
 const App = () => {
   return (
-    <ChakraProvider theme={theme}>
-      <div>HoBom</div>
-    </ChakraProvider>
+    <ChakraBaseProvider theme={theme}>
+      <GlobalErrorBoundary>
+        <div>HoBom</div>
+      </GlobalErrorBoundary>
+    </ChakraBaseProvider>
   );
 };
 
