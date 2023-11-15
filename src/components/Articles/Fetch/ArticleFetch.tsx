@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 // chakra
 import { Box } from "@chakra-ui/react";
 
@@ -22,14 +20,12 @@ interface ArticleFetchResult {
 }
 
 export const ArticleFetch = () => {
-  const [pageNumber, setPageNumber] = useState<number>(1);
-
   const PER_PAGE_NUMBER: number = 5;
 
   const articlesResult: Nullable<ArticleFetchResult> = useFetch<
     string,
     ArticleFetchResult
-  >(get, `/article/list?pageNumber=${pageNumber}&perPage=${PER_PAGE_NUMBER}`);
+  >(get, `/article/list?pageNumber=${1}&perPage=${PER_PAGE_NUMBER}`);
 
   return (
     <Box
