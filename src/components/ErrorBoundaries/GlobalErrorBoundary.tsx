@@ -8,7 +8,7 @@ import { CheckCircleIcon } from "@chakra-ui/icons";
 import { FaBomb } from "react-icons/fa";
 
 // types
-import { ChildrenAlias } from "@/types";
+import type { ChildrenAlias } from "@/types";
 
 interface GlobalErrorBoundaryProps {
   children: ChildrenAlias;
