@@ -17,7 +17,7 @@ interface ApiErrorFallbackProps {
 export const ApiErrorFallback = ({ error }: ApiErrorFallbackProps) => {
   useEffect(() => {
     console.error(error);
-  }, []);
+  }, [error]);
 
   // TODO
   const handleResendRequestClick = () => {
