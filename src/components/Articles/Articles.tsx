@@ -32,9 +32,11 @@ export const Articles = () => {
           <Text as="b" fontSize="xl" color="gray.500">
             Articles
           </Text>
-          <Box h="100%">
-            <ArticleFetch />
-          </Box>
+          <Suspense fallback={<AppSpinner />}>
+            <Box h="100%">
+              <ArticleFetch />
+            </Box>
+          </Suspense>
         </ApiErrorBoundary>
       </Box>
     </Box>
