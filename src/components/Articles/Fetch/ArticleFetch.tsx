@@ -1,3 +1,5 @@
+import { useState, useCallback } from "react";
+
 // chakra
 import { Box } from "@chakra-ui/react";
 
@@ -5,7 +7,7 @@ import { Box } from "@chakra-ui/react";
 import { useFetch } from "@/hooks";
 
 // components
-import { RenderProps, ArticleCard } from "@/components";
+import { RenderProps, ArticleCard, Paginator } from "@/components";
 
 // apis
 import { get } from "@/apis";
@@ -22,10 +24,37 @@ interface ArticleFetchResult {
 export const ArticleFetch = () => {
   const PER_PAGE_NUMBER: number = 5;
 
+  const [curPageNumber, setCurPageNumber] = useState<number>(1);
+
   const articlesResult: Nullable<ArticleFetchResult> = useFetch<
     string,
     ArticleFetchResult
-  >(get, `/article/list?pageNumber=${1}&perPage=${PER_PAGE_NUMBER}`);
+  >(
+    get,
+    `/article/list?pageNumber=${curPageNumber}&perPage=${PER_PAGE_NUMBER}`,
+  );
+
+  const handleBackButtonClick = useCallback(() => {
+    if (curPageNumber === 1) {
+      return;
+    }
+
+    setCurPageNumber((prev: number) => prev - 1);
+  }, [curPageNumber]);
+
+  const handleFowardButtonClick = useCallback(() => {
+    if (articlesResult) {
+      if (articlesResult.totalPageNumber === curPageNumber) {
+        return;
+      }
+    }
+
+    setCurPageNumber((prev: number) => prev + 1);
+  }, [articlesResult, curPageNumber]);
+
+  const handlePageButtonClick = (pageNumber: number) => {
+    setCurPageNumber(pageNumber);
+  };
 
   return (
     <Box
@@ -57,6 +86,17 @@ export const ArticleFetch = () => {
           }}
         />
       )}
+      <Box mt="30px">
+        {articlesResult && (
+          <Paginator
+            curPageNumber={curPageNumber}
+            totalPageNumber={articlesResult?.totalPageNumber}
+            onBackButtonClickEvent={handleBackButtonClick}
+            onFowardButtonClickEvent={handleFowardButtonClick}
+            onPageButtonClickEvent={handlePageButtonClick}
+          />
+        )}
+      </Box>
     </Box>
   );
 };
