@@ -63,7 +63,7 @@ export class Http implements HttpBase {
 
   private initializeAxios(): AxiosInstance {
     const axiosInstance: AxiosInstance = axios.create({
-      baseURL: import.meta.env.VITE_APP_BASE_URL,
+      baseURL: import.meta.env.VITE_APP_SERVER_HOST,
       headers: {
         "Content-Type": "application/json",
       },

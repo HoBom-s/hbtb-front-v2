@@ -1,65 +1,102 @@
+import { useState, useCallback } from "react";
+
 // chakra
-import { Box, Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 // hooks
 import { useFetch } from "@/hooks";
 
 // components
-import { RenderProps } from "@/components";
+import { RenderProps, ArticleCard, Paginator } from "@/components";
 
 // apis
 import { get } from "@/apis";
 
 // types
-import { Nullable } from "@/types";
+import type { Nullable, Article } from "@/types";
 
-interface Article {
-  _id: string;
+interface ArticleFetchResult {
+  articles: Nullable<Article[]>;
 
-  thumbnail: string;
-
-  title: string;
-
-  subtitle: string;
-
-  contents: string;
-
-  tags: string[];
-
-  writers: string[];
-
-  path: string;
-
-  createdAt: string;
-
-  updatedAt: string;
+  totalPageNumber: 2;
 }
 
 export const ArticleFetch = () => {
-  const articles: Nullable<Article[]> = useFetch<string, Article[]>(
+  const PER_PAGE_NUMBER: number = 5;
+
+  const [curPageNumber, setCurPageNumber] = useState<number>(1);
+
+  const articlesResult: Nullable<ArticleFetchResult> = useFetch<
+    string,
+    ArticleFetchResult
+  >(
     get,
-    "/article",
+    `/article/list?pageNumber=${curPageNumber}&perPage=${PER_PAGE_NUMBER}`,
   );
 
+  const handleBackButtonClick = useCallback(() => {
+    if (curPageNumber === 1) {
+      return;
+    }
+
+    setCurPageNumber((prev: number) => prev - 1);
+  }, [curPageNumber]);
+
+  const handleFowardButtonClick = useCallback(() => {
+    if (articlesResult) {
+      if (articlesResult.totalPageNumber === curPageNumber) {
+        return;
+      }
+    }
+
+    setCurPageNumber((prev: number) => prev + 1);
+  }, [articlesResult, curPageNumber]);
+
+  const handlePageButtonClick = (pageNumber: number) => {
+    setCurPageNumber(pageNumber);
+  };
+
   return (
-    <Box>
-      {articles ? (
+    <Box
+      h="100%"
+      py="24px"
+      sx={{
+        ".article-render-list": {
+          display: "flex",
+          flexDir: "column",
+          gap: 4,
+        },
+      }}
+    >
+      {articlesResult && (
         <RenderProps
-          className="article-cards"
-          items={articles}
+          className="article-render-list"
+          items={articlesResult.articles || []}
           render={(item: Article) => {
             return (
-              <Box>
-                <Text>{item.title}</Text>
-              </Box>
+              <ArticleCard
+                thumbnail={item.thumbnail}
+                title={item.title}
+                subtitle={item.subtitle}
+                authorNickname={item.writers[0].nickname}
+                authorThumbnail={item.writers[0].profileImg}
+                createdAt={item.createdAt.split("T")[0]}
+              />
             );
           }}
         />
-      ) : (
-        <Text as="b" fontSize="lg">
-          Cannot find article
-        </Text>
       )}
+      <Box mt="30px">
+        {articlesResult && (
+          <Paginator
+            curPageNumber={curPageNumber}
+            totalPageNumber={articlesResult?.totalPageNumber}
+            onBackButtonClickEvent={handleBackButtonClick}
+            onFowardButtonClickEvent={handleFowardButtonClick}
+            onPageButtonClickEvent={handlePageButtonClick}
+          />
+        )}
+      </Box>
     </Box>
   );
 };

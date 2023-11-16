@@ -45,11 +45,12 @@ export const useFetch = <Params, FetchResult>(
         .then(resolve)
         .catch((e) => throwAsyncError(e)),
     );
-  }, [params, fetch, resolve, throwAsyncError]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params]);
 
   // Promise의 상태가 pending이라면 _promise를 Throw
   if (_status === "pending" && _promise) {
-    console.log(_promise);
     throw _promise;
   }
 
