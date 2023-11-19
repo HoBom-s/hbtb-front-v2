@@ -1,7 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, ChangeEvent } from "react";
 
 // chakra
-import { Box, Button, Flex, Text, Image } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Text,
+  Image,
+  InputGroup,
+  Input,
+  InputRightElement,
+} from "@chakra-ui/react";
+import { SearchIcon } from "@chakra-ui/icons";
 
 // icons
 import { FaSearch } from "react-icons/fa";
@@ -11,12 +21,24 @@ import MainImage from "@/assets/main-bg.jpg";
 
 export const Header = () => {
   const [headerScrollPosition, setHeaderScrollPosition] = useState<number>(0);
+  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
+  const [searchKeyword, setSearchKeyword] = useState<string>("");
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
       setHeaderScrollPosition(window.scrollY);
     });
   }, []);
+
+  const handleSearchButtonClick = useCallback(() => {
+    setIsSearchOpen((prevIsSearchOpen: boolean) => !prevIsSearchOpen);
+  }, []);
+
+  const handleSearchValueChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+
+    setSearchKeyword(value);
+  };
 
   return (
     <Box>
@@ -56,12 +78,46 @@ export const Header = () => {
               bg="transparent"
               color="white"
               _hover={{ bg: "transparent" }}
+              onClick={handleSearchButtonClick}
             >
               <FaSearch />
             </Button>
           </Box>
         </Flex>
       </Box>
+      {isSearchOpen && headerScrollPosition < 84 && (
+        <Box
+          w="100%"
+          height="420px"
+          top="0"
+          left="0"
+          zIndex={1}
+          position="fixed"
+          bgColor="black"
+        >
+          <Box
+            w="100%"
+            h="100%"
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            flexDirection="column"
+          >
+            <InputGroup w="500px">
+              <Input
+                size="lg"
+                bgColor="white"
+                placeholder="검색어를 입력하세요."
+                value={searchKeyword}
+                onChange={handleSearchValueChange}
+              />
+              <InputRightElement cursor="pointer">
+                <SearchIcon />
+              </InputRightElement>
+            </InputGroup>
+          </Box>
+        </Box>
+      )}
       <Box w="100%" h="420px" top={0} left={0} zIndex={0}>
         <Image
           w="100%"
