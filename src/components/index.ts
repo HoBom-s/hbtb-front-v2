@@ -29,6 +29,9 @@ import { Paginator } from "./Paginator/Paginator";
 // RenderProps
 import { RenderProps } from "./RenderProps/RenderProps";
 
+// TagItem
+import { TagItem } from "./TagItem/TagItem";
+
 export {
   ImageFallbackSpinner,
   AppSpinner,
@@ -45,4 +48,5 @@ export {
   Header,
   Paginator,
   RenderProps,
+  TagItem,
 };
