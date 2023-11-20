@@ -31,6 +31,8 @@ import { RenderProps } from "./RenderProps/RenderProps";
 
 // TagItem
 import { TagItem } from "./TagItem/TagItem";
+import { TagItemFetch } from "./TagItem/Fetch/TagItemFetch";
+import { TagItemSkeleton } from "./TagItem/Skeleton/TagItemSkeleton";
 
 export {
   ImageFallbackSpinner,
@@ -49,4 +51,6 @@ export {
   Paginator,
   RenderProps,
   TagItem,
+  TagItemFetch,
+  TagItemSkeleton,
 };
