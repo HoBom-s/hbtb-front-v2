@@ -86,7 +86,7 @@ export const ArticleFetch = () => {
           }}
         />
       )}
-      <Box mt="30px">
+      <Box mt="40px">
         {articlesResult && (
           <Paginator
             curPageNumber={curPageNumber}

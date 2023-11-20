@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
 // chakra
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 
 // components
 import {
@@ -10,6 +10,8 @@ import {
   ArticleRecentFetch,
   ArticleFetch,
   ArticleCardSkeleton,
+  TagItemFetch,
+  TagItemSkeleton,
 } from "..";
 
 export const Articles = () => {
@@ -48,24 +50,47 @@ export const Articles = () => {
           </Suspense>
         </ApiErrorBoundary>
       </Box>
-      <Box mt={14}>
+      <Box maxW="1200px" mt={14}>
         <ApiErrorBoundary Fallback={ApiErrorFallback}>
           <Text as="b" fontSize="xl" color="gray.500">
             Articles
           </Text>
-          <Suspense
-            fallback={
-              <Box>
-                {[1, 2, 3, 4, 5].map((num: number) => (
-                  <ArticleCardSkeleton key={num} />
-                ))}
+          <Flex justifyContent="space-between">
+            <Suspense
+              fallback={
+                <Box>
+                  {[1, 2, 3, 4, 5].map((num: number) => (
+                    <ArticleCardSkeleton key={num} />
+                  ))}
+                </Box>
+              }
+            >
+              <Box maxW="900px" h="100%">
+                <ArticleFetch />
               </Box>
-            }
-          >
-            <Box h="100%">
-              <ArticleFetch />
+            </Suspense>
+            <Box
+              sx={{
+                "@media screen and (max-width: 899px)": {
+                  display: "none",
+                },
+              }}
+            >
+              <Suspense
+                fallback={
+                  <Box py="24px" maxW="300px" gap={2}>
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num: number) => (
+                      <TagItemSkeleton key={num} />
+                    ))}
+                  </Box>
+                }
+              >
+                <Box maxW="300px">
+                  <TagItemFetch />
+                </Box>
+              </Suspense>
             </Box>
-          </Suspense>
+          </Flex>
         </ApiErrorBoundary>
       </Box>
     </Box>
