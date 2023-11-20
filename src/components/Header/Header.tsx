@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, ChangeEvent } from "react";
+import { useState, useEffect, useCallback, ChangeEvent, Suspense } from "react";
 
 // chakra
 import {
@@ -11,10 +11,18 @@ import {
   Input,
   InputRightElement,
 } from "@chakra-ui/react";
-import { SearchIcon } from "@chakra-ui/icons";
+import { Search2Icon } from "@chakra-ui/icons";
 
 // icons
 import { FaSearch } from "react-icons/fa";
+
+// components
+import {
+  ApiErrorBoundary,
+  ApiErrorFallback,
+  TagItemFetch,
+  TagItemSkeleton,
+} from "..";
 
 // images
 import MainImage from "@/assets/main-bg.jpg";
@@ -94,16 +102,17 @@ export const Header = () => {
           zIndex={1}
           position="fixed"
           bgColor="black"
+          sx={{ display: "flex", justifyContent: "center" }}
         >
           <Box
-            w="100%"
             h="100%"
             display="flex"
             justifyContent="center"
             alignItems="center"
             flexDirection="column"
+            maxW="1200px"
           >
-            <InputGroup w="500px">
+            <InputGroup maxW="500px" px={2}>
               <Input
                 size="lg"
                 bgColor="white"
@@ -111,10 +120,23 @@ export const Header = () => {
                 value={searchKeyword}
                 onChange={handleSearchValueChange}
               />
-              <InputRightElement cursor="pointer">
-                <SearchIcon />
+              <InputRightElement cursor="pointer" mr="10px">
+                <Search2Icon />
               </InputRightElement>
             </InputGroup>
+            <ApiErrorBoundary Fallback={ApiErrorFallback}>
+              <Suspense
+                fallback={
+                  <Flex py="24px" maxW="1200px" gap={2}>
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num: number) => (
+                      <TagItemSkeleton key={num} />
+                    ))}
+                  </Flex>
+                }
+              >
+                <TagItemFetch />
+              </Suspense>
+            </ApiErrorBoundary>
           </Box>
         </Box>
       )}
