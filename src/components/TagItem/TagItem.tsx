@@ -1,16 +1,23 @@
 // chakra
 import { Tag } from "@chakra-ui/react";
 
-interface TagItemProps {
-  name: string;
+// types
+import type { Tag as ArticleTag } from "@/types";
 
-  onTagItemClickEvent: () => void;
+interface TagItemProps {
+  tag: ArticleTag;
+
+  onTagItemClickEvent: (tag: ArticleTag) => void;
 }
 
-export const TagItem = ({ name, onTagItemClickEvent }: TagItemProps) => {
+export const TagItem = ({ tag, onTagItemClickEvent }: TagItemProps) => {
   return (
-    <Tag colorScheme="teal" onClick={onTagItemClickEvent}>
-      {name}
+    <Tag
+      colorScheme="teal"
+      cursor="pointer"
+      onClick={() => onTagItemClickEvent(tag)}
+    >
+      {tag.title}
     </Tag>
   );
 };
