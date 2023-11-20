@@ -17,22 +17,40 @@ interface ArticleRecentCardProps {
 
   title: string;
 
+  subtitle: string;
+
   authorNickname: string;
 
   authorThumbnail: string;
 
+  path: string;
+
   createdAt: string;
+
+  onArticleRecentCardClickEvent: (
+    title: string,
+    subtitle: string,
+    path: string,
+  ) => void;
 }
 
 export const ArticleRecentCard = ({
   thumbnail,
   title,
+  subtitle,
   authorNickname,
   authorThumbnail,
+  path,
   createdAt,
+  onArticleRecentCardClickEvent,
 }: ArticleRecentCardProps) => {
   return (
-    <Card maxW="sm" w="380px" cursor="pointer">
+    <Card
+      maxW="sm"
+      w="380px"
+      cursor="pointer"
+      onClick={() => onArticleRecentCardClickEvent(title, subtitle, path)}
+    >
       <CardBody p={0}>
         <Image
           src={thumbnail}

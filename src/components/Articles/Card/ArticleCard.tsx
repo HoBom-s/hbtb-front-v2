@@ -23,7 +23,15 @@ interface ArticleCardProps {
 
   authorThumbnail: string;
 
+  path: string;
+
   createdAt: string;
+
+  onArticleCardClickEvent: (
+    title: string,
+    subtitle: string,
+    path: string,
+  ) => void;
 }
 
 export const ArticleCard = ({
@@ -32,10 +40,18 @@ export const ArticleCard = ({
   subtitle,
   authorNickname,
   authorThumbnail,
+  path,
   createdAt,
+  onArticleCardClickEvent,
 }: ArticleCardProps) => {
   return (
-    <Card minW="300px" maxW="700px" w="100%" cursor="pointer">
+    <Card
+      minW="300px"
+      maxW="700px"
+      w="100%"
+      cursor="pointer"
+      onClick={() => onArticleCardClickEvent(title, subtitle, path)}
+    >
       <CardBody p={0}>
         <Flex flexDir="row" alignItems="center">
           <Image
