@@ -1,4 +1,16 @@
-import { useState, useEffect, useCallback, ChangeEvent, Suspense } from "react";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  ChangeEvent,
+  Suspense,
+} from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+
+// recoil
+import { useRecoilValue } from "recoil";
+import { ArticlePost, articlePostSelector } from "@/store";
 
 // chakra
 import {
@@ -31,6 +43,31 @@ export const Header = () => {
   const [headerScrollPosition, setHeaderScrollPosition] = useState<number>(0);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
+
+  const articlePost: ArticlePost = useRecoilValue(articlePostSelector);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const headerInformation: ArticlePost = useMemo(() => {
+    const { title, subtitle } = articlePost;
+
+    const { pathname } = location;
+
+    const currentPath: string = pathname.split("/")[1];
+
+    if (currentPath === "post") {
+      return {
+        title: title,
+        subtitle: subtitle,
+      };
+    }
+
+    return {
+      title: "Tech Blog",
+      subtitle: "HoBom 서비스의 기술과 노하우를 공유합니다.",
+    };
+  }, [location, articlePost]);
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -67,7 +104,12 @@ export const Header = () => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <Button bg="transparent" color="white" _hover={{ bg: "transparent" }}>
+          <Button
+            bg="transparent"
+            color="white"
+            _hover={{ bg: "transparent" }}
+            onClick={() => navigate("/")}
+          >
             <Text as="b" fontSize="xl">
               HOBOM TECH
             </Text>
@@ -164,14 +206,14 @@ export const Header = () => {
               mb="24px"
               color="white"
             >
-              Tech Blog
+              {headerInformation.title}
             </Text>
             <Text
               color="#FFFFFF8A"
               fontSize={{ sm: "16px", md: "18px", lg: "18px" }}
               letterSpacing={-1}
             >
-              HoBom 서비스의 기술과 노하우를 공유합니다.
+              {headerInformation.subtitle}
             </Text>
           </Box>
         </Box>

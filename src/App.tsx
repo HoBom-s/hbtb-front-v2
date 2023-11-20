@@ -1,3 +1,6 @@
+// recoil
+import { RecoilRoot } from "recoil";
+
 // chakra
 import { ChakraBaseProvider } from "@chakra-ui/react";
 
@@ -14,7 +17,9 @@ const App = () => {
   return (
     <ChakraBaseProvider theme={theme}>
       <GlobalErrorBoundary>
-        <PublicRouter />
+        <RecoilRoot>
+          <PublicRouter />
+        </RecoilRoot>
       </GlobalErrorBoundary>
     </ChakraBaseProvider>
   );

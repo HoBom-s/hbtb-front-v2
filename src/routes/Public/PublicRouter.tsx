@@ -8,6 +8,7 @@ import { Flex } from "@chakra-ui/react";
 
 // pages
 const ArticleMain = lazy(() => import("@/pages/ArticleMainPage"));
+const ArticleDetailMain = lazy(() => import("@/pages/ArticleDetailPage"));
 
 // hoc
 import { withLayout } from "@/hoc";
@@ -16,6 +17,7 @@ import { withLayout } from "@/hoc";
 import { AppSpinner } from "@/components";
 
 const LayoutArticleMain = withLayout(ArticleMain);
+const LayoutArticleDetailMain = withLayout(ArticleDetailMain);
 
 const SuspenseSpinnerSection = () => {
   return (
@@ -31,6 +33,7 @@ export const PublicRouter = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LayoutArticleMain />} />
+          <Route path="/post/:path" element={<LayoutArticleDetailMain />} />
         </Routes>
       </BrowserRouter>
     </Suspense>

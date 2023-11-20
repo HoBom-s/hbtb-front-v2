@@ -9,6 +9,9 @@ import { ArticleFetch } from "./Articles/Fetch/ArticleFetch";
 import { ArticleRecentFetch } from "./Articles/Fetch/ArticleRecentFetch";
 import { Articles } from "./Articles/Articles";
 import { ArticleCardSkeleton } from "./Articles/Skeleton/ArticleCardSkeleton";
+import { ArticleDetail } from "./Articles/Detail/ArticleDetail";
+import { ArticleDetailFetch } from "./Articles/Fetch/ArticleDetailFetch";
+import { ArticleDetailSkeleton } from "./Articles/Skeleton/ArticleDetailSkeleton";
 
 // ErrorBoundary
 import { ApiErrorBoundary } from "./ErrorBoundaries/ApiErrorBoundary";
@@ -43,6 +46,9 @@ export {
   ArticleRecentFetch,
   Articles,
   ArticleCardSkeleton,
+  ArticleDetail,
+  ArticleDetailFetch,
+  ArticleDetailSkeleton,
   ApiErrorBoundary,
   GlobalErrorBoundary,
   ApiErrorFallback,
