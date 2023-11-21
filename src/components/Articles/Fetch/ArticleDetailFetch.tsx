@@ -34,7 +34,12 @@ export const ArticleDetailFetch = ({ path }: ArticleDetailFetchProps) => {
               {articleContentsResult.createdAt.split("T")[0]}
             </Text>
           </Box>
-          <ArticleDetail contents={articleContentsResult.contents} />
+          <ArticleDetail
+            contents={articleContentsResult.contents}
+            authorThumbnail={articleContentsResult.writers[0].profileImg}
+            authorNickname={articleContentsResult.writers[0].nickname}
+            authorIntroduction={articleContentsResult.writers[0].introduction}
+          />
         </Box>
       )}
     </Box>

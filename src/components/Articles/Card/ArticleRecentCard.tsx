@@ -30,6 +30,7 @@ interface ArticleRecentCardProps {
   onArticleRecentCardClickEvent: (
     title: string,
     subtitle: string,
+    thumbnail: string,
     path: string,
   ) => void;
 }
@@ -49,7 +50,9 @@ export const ArticleRecentCard = ({
       maxW="sm"
       w="380px"
       cursor="pointer"
-      onClick={() => onArticleRecentCardClickEvent(title, subtitle, path)}
+      onClick={() =>
+        onArticleRecentCardClickEvent(title, subtitle, thumbnail, path)
+      }
     >
       <CardBody p={0}>
         <Image

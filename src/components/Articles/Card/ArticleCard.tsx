@@ -30,6 +30,7 @@ interface ArticleCardProps {
   onArticleCardClickEvent: (
     title: string,
     subtitle: string,
+    thumbnail: string,
     path: string,
   ) => void;
 }
@@ -50,7 +51,7 @@ export const ArticleCard = ({
       maxW="700px"
       w="100%"
       cursor="pointer"
-      onClick={() => onArticleCardClickEvent(title, subtitle, path)}
+      onClick={() => onArticleCardClickEvent(title, subtitle, thumbnail, path)}
     >
       <CardBody p={0}>
         <Flex flexDir="row" alignItems="center">
