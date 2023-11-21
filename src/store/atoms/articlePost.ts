@@ -5,6 +5,8 @@ export interface ArticlePost {
   title: string;
 
   subtitle: string;
+
+  thumbnail: string;
 }
 
 export const articlePost = atom<ArticlePost>({
@@ -12,5 +14,6 @@ export const articlePost = atom<ArticlePost>({
   default: {
     title: "",
     subtitle: "",
+    thumbnail: "",
   },
 });
