@@ -46,11 +46,13 @@ export const ArticleFetch = () => {
   const handleArticleCardClick = (
     title: string,
     subtitle: string,
+    thumbnail: string,
     path: string,
   ) => {
     setArticlePost({
       title: title,
       subtitle: subtitle,
+      thumbnail: thumbnail,
     });
 
     navigate(`/post${path}`);

@@ -32,11 +32,13 @@ export const ArticleRecentFetch = () => {
   const handleArticleRecentCardClick = (
     title: string,
     subtitle: string,
+    thumbnail: string,
     path: string,
   ) => {
     setArticlePost({
       title: title,
       subtitle: subtitle,
+      thumbnail: thumbnail,
     });
 
     navigate(`/post${path}`);
