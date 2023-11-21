@@ -13,5 +13,12 @@ HoBom Tech Blog
 # Start
 
 ```sh
+# Node version manager
+nvm install
+
+# Target node start
+nvm use
+
+# Development react start
 npm run dev
 ```
