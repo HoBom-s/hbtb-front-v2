@@ -50,7 +50,7 @@ export const Header = () => {
   const location = useLocation();
 
   const headerInformation: ArticlePost = useMemo(() => {
-    const { title, subtitle } = articlePost;
+    const { title, subtitle, thumbnail } = articlePost;
 
     const { pathname } = location;
 
@@ -60,12 +60,14 @@ export const Header = () => {
       return {
         title: title,
         subtitle: subtitle,
+        thumbnail: thumbnail,
       };
     }
 
     return {
       title: "Tech Blog",
       subtitle: "HoBom 서비스의 기술과 노하우를 공유합니다.",
+      thumbnail: MainImage,
     };
   }, [location, articlePost]);
 
@@ -186,7 +188,12 @@ export const Header = () => {
         <Image
           w="100%"
           h="420px"
-          src={MainImage}
+          src={headerInformation.thumbnail}
+          filter={
+            headerInformation.thumbnail === MainImage
+              ? "brightness(100%)"
+              : "brightness(50%)"
+          }
           objectFit="cover"
           position="absolute"
         />
