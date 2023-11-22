@@ -42,6 +42,7 @@ export const PrivateRouter = ({ children }: PrivateRouterProps) => {
         navigate("/");
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <Fragment>{children}</Fragment>;
