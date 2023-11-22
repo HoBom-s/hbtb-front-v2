@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 // chakra
 import { Flex, Box, Stack, Text, Button } from "@chakra-ui/react";
 
@@ -5,6 +7,8 @@ import { Flex, Box, Stack, Text, Button } from "@chakra-ui/react";
 import { FaUser } from "react-icons/fa";
 
 export const Footer = () => {
+  const navigate = useNavigate();
+
   return (
     <Flex
       h="148px"
@@ -18,17 +22,19 @@ export const Footer = () => {
           <Text as="b" color="gray.500">
             © HOBOM SERVICE.
           </Text>
-          <Flex
-            w="80px"
-            flex={1}
-            alignItems="center"
-            color="gray.500"
-            gap={2}
-            cursor="pointer"
-          >
-            <FaUser />
-            <Text as="b">Admin</Text>
-          </Flex>
+          <Box onClick={() => navigate("/admin")}>
+            <Flex
+              w="80px"
+              flex={1}
+              alignItems="center"
+              color="gray.500"
+              gap={2}
+              cursor="pointer"
+            >
+              <FaUser />
+              <Text as="b">Admin</Text>
+            </Flex>
+          </Box>
         </Stack>
       </Box>
       <Box>

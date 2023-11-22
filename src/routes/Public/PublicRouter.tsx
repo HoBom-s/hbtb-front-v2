@@ -12,6 +12,7 @@ const ArticleDetailMain = lazy(() => import("@/pages/ArticleDetailPage"));
 const ArticleSearchResultMain = lazy(
   () => import("@/pages/ArticleSearchResultPage"),
 );
+const AdminLoginMain = lazy(() => import("@/pages/AdminLoginPage"));
 
 // hoc
 import { withLayout } from "@/hoc";
@@ -39,6 +40,7 @@ export const PublicRouter = () => {
           <Route path="/" element={<LayoutArticleMain />} />
           <Route path="/post/:path" element={<LayoutArticleDetailMain />} />
           <Route path="/search" element={<LayoutArticleSearchResultMain />} />
+          <Route path="/admin" element={<AdminLoginMain />} />
         </Routes>
       </BrowserRouter>
     </Suspense>

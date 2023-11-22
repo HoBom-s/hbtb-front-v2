@@ -15,7 +15,7 @@ export class Http implements HttpBase {
 
   async get<Response>(url: string): Promise<Response> {
     try {
-      const response = this.fetcher.get(url);
+      const response = await this.fetcher.get(url);
 
       return response as Response;
     } catch (error) {
@@ -29,7 +29,7 @@ export class Http implements HttpBase {
     config?: AxiosRequestConfig,
   ): Promise<Response> {
     try {
-      const response = this.fetcher.post(url, data, config);
+      const response = await this.fetcher.post(url, data, config);
 
       return response as Response;
     } catch (error) {
@@ -43,7 +43,7 @@ export class Http implements HttpBase {
     config?: AxiosRequestConfig,
   ): Promise<Response> {
     try {
-      const response = this.fetcher.patch(url, data, config);
+      const response = await this.fetcher.patch(url, data, config);
 
       return response as Response;
     } catch (error) {
@@ -53,7 +53,7 @@ export class Http implements HttpBase {
 
   async del<Response>(url: string): Promise<Response> {
     try {
-      const response = this.fetcher.delete(url);
+      const response = await this.fetcher.delete(url);
 
       return response as Response;
     } catch (error) {
