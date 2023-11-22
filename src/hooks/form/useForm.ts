@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, ChangeEvent } from "react";
 
-interface Form {
+export interface Form {
   [key: string]: {
     type: "email" | "text" | "password";
 
@@ -29,7 +29,7 @@ interface UserForm {
  *      Form Element를 잘 컨트롤 하기 위한 hook
  *
  * @example
- *      const { formValue, isValidForm, setFormValue } = useForm({
+ *      const { formValue, isValidForm, handleFormValueChange } = useForm({
  *          "username": {
  *              type: "text",
  *              value: "",
