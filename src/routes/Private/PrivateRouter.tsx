@@ -25,18 +25,23 @@ export const PrivateRouter = ({ children }: PrivateRouterProps) => {
         navigate("/");
       }
 
-      const authCheck: Auth = await get("/user/me", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer: ${authToken}`,
-        },
-      });
+      try {
+        const authCheck: Auth = await get("/user/me", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
 
-      if (!authCheck._id) {
+        if (!authCheck._id) {
+          navigate("/");
+        }
+      } catch (e: unknown) {
+        console.error(e);
+
         navigate("/");
       }
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <Fragment>{children}</Fragment>;
