@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { useNavigate } from "react-router-dom";
 
 // chakra
 import { Box, Flex, Text } from "@chakra-ui/react";
@@ -14,7 +15,18 @@ import {
   TagItemSkeleton,
 } from "..";
 
+// types
+import type { Tag } from "@/types";
+
 export const Articles = () => {
+  const navigate = useNavigate();
+
+  const handleTagItemClick = (tag: Tag) => {
+    const { title } = tag;
+
+    navigate(`/search?keyword=${title}`);
+  };
+
   return (
     <Box>
       <Box>
@@ -86,7 +98,7 @@ export const Articles = () => {
                 }
               >
                 <Box maxW="300px">
-                  <TagItemFetch />
+                  <TagItemFetch onTagItemClickEvent={handleTagItemClick} />
                 </Box>
               </Suspense>
             </Box>
