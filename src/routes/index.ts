@@ -1,4 +1,7 @@
+// private
+import { PrivateRouter } from "./Private/PrivateRouter";
+
 // public
 import { PublicRouter } from "./Public/PublicRouter";
 
-export { PublicRouter };
+export { PrivateRouter, PublicRouter };

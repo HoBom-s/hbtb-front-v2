@@ -6,6 +6,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // chakra
 import { Flex } from "@chakra-ui/react";
 
+// router
+import { PrivateRouter } from "..";
+
 // pages
 const ArticleMain = lazy(() => import("@/pages/ArticleMainPage"));
 const ArticleDetailMain = lazy(() => import("@/pages/ArticleDetailPage"));
@@ -13,6 +16,7 @@ const ArticleSearchResultMain = lazy(
   () => import("@/pages/ArticleSearchResultPage"),
 );
 const AdminLoginMain = lazy(() => import("@/pages/AdminLoginPage"));
+const AdminDashBoardPage = lazy(() => import("@/pages/AdminDashboardPage"));
 
 // hoc
 import { withLayout } from "@/hoc";
@@ -41,6 +45,14 @@ export const PublicRouter = () => {
           <Route path="/post/:path" element={<LayoutArticleDetailMain />} />
           <Route path="/search" element={<LayoutArticleSearchResultMain />} />
           <Route path="/admin" element={<AdminLoginMain />} />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRouter>
+                <AdminDashBoardPage />
+              </PrivateRouter>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </Suspense>

@@ -6,6 +6,7 @@ import type { Nullable } from "./Nullable/Nullable";
 
 // Schema
 import type { Article } from "./Schema/Article";
+import type { Auth } from "./Schema/Auth";
 import type { Author } from "./Schema/Author";
 import type { Tag } from "./Schema/Tag";
 
@@ -14,6 +15,7 @@ export type {
   ChildrenAlias,
   Nullable,
   Article,
+  Auth,
   Author,
   Tag,
 };
