@@ -1,5 +1,3 @@
-import { useCallback } from "react";
-
 // chakra
 import { Box } from "@chakra-ui/react";
 
@@ -15,12 +13,12 @@ import { get } from "@/apis";
 // types
 import type { Nullable, Tag } from "@/types";
 
-export const TagItemFetch = () => {
-  const tagResult: Nullable<Tag[]> = useFetch<string, Tag[]>(get, "/tag");
+interface TagItemFetchProps {
+  onTagItemClickEvent: (tag: Tag) => void;
+}
 
-  const handleTagItemClick = useCallback((tag: Tag) => {
-    console.log(tag);
-  }, []);
+export const TagItemFetch = ({ onTagItemClickEvent }: TagItemFetchProps) => {
+  const tagResult: Nullable<Tag[]> = useFetch<string, Tag[]>(get, "/tag");
 
   return (
     <Box
@@ -41,7 +39,7 @@ export const TagItemFetch = () => {
           items={tagResult}
           render={(item: Tag) => {
             return (
-              <TagItem tag={item} onTagItemClickEvent={handleTagItemClick} />
+              <TagItem tag={item} onTagItemClickEvent={onTagItemClickEvent} />
             );
           }}
         />

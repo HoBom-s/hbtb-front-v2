@@ -4,6 +4,7 @@ import {
   useCallback,
   useMemo,
   ChangeEvent,
+  KeyboardEvent,
   Suspense,
 } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -38,6 +39,9 @@ import {
 
 // images
 import MainImage from "@/assets/main-bg.jpg";
+
+// types
+import type { Tag } from "@/types";
 
 export const Header = () => {
   const [headerScrollPosition, setHeaderScrollPosition] = useState<number>(0);
@@ -85,6 +89,28 @@ export const Header = () => {
     const { value } = e.target;
 
     setSearchKeyword(value);
+  };
+
+  const handleSearchKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+
+      setIsSearchOpen((prevIsSearchOpen: boolean) => !prevIsSearchOpen);
+
+      navigate(`/search?keyword=${searchKeyword}`);
+    }
+  };
+
+  const handleSearchResultButtonClick = () => {
+    setIsSearchOpen(false);
+
+    navigate(`/search?keyword=${searchKeyword}`);
+  };
+
+  const handleTagItemClick = (tag: Tag) => {
+    const { title } = tag;
+
+    navigate(`/search?keyword=${title}`);
   };
 
   return (
@@ -163,8 +189,13 @@ export const Header = () => {
                 placeholder="검색어를 입력하세요."
                 value={searchKeyword}
                 onChange={handleSearchValueChange}
+                onKeyDown={handleSearchKeyDown}
               />
-              <InputRightElement cursor="pointer" mr="10px">
+              <InputRightElement
+                cursor="pointer"
+                mr="10px"
+                onClick={handleSearchResultButtonClick}
+              >
                 <Search2Icon />
               </InputRightElement>
             </InputGroup>
@@ -178,7 +209,7 @@ export const Header = () => {
                   </Flex>
                 }
               >
-                <TagItemFetch />
+                <TagItemFetch onTagItemClickEvent={handleTagItemClick} />
               </Suspense>
             </ApiErrorBoundary>
           </Box>
