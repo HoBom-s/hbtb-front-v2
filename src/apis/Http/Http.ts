@@ -13,9 +13,12 @@ export class Http implements HttpBase {
     this.fetcher = this.initializeAxios();
   }
 
-  async get<Response>(url: string): Promise<Response> {
+  async get<Response>(
+    url: string,
+    config?: AxiosRequestConfig,
+  ): Promise<Response> {
     try {
-      const response = await this.fetcher.get(url);
+      const response = await this.fetcher.get(url, config);
 
       return response as Response;
     } catch (error) {
