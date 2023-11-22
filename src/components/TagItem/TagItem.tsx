@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 // chakra
 import { Tag } from "@chakra-ui/react";
 
@@ -10,7 +12,7 @@ interface TagItemProps {
   onTagItemClickEvent: (tag: ArticleTag) => void;
 }
 
-export const TagItem = ({ tag, onTagItemClickEvent }: TagItemProps) => {
+export const TagItem = memo(({ tag, onTagItemClickEvent }: TagItemProps) => {
   return (
     <Tag
       colorScheme="teal"
@@ -20,4 +22,4 @@ export const TagItem = ({ tag, onTagItemClickEvent }: TagItemProps) => {
       {tag.title}
     </Tag>
   );
-};
+});
