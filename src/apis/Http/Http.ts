@@ -3,13 +3,22 @@ import axios, { AxiosInstance, AxiosRequestConfig, isAxiosError } from "axios";
 // http
 import { HttpError } from "../HttpError/HttpError";
 
-// type
+// utils
+import { AUTH_KEY, SessionStorage } from "@/utils";
+
+// types
 import type { HttpBase } from "./HttpBase";
+import type { Nullable } from "@/types";
 
 export class Http implements HttpBase {
+  // 한 번만 다시 재요청 보냄
+  private isRerequest: boolean;
+
   private fetcher: AxiosInstance;
 
   constructor() {
+    this.isRerequest = false;
+
     this.fetcher = this.initializeAxios();
   }
 
@@ -95,10 +104,14 @@ export class Http implements HttpBase {
       async (error) => {
         const { status } = error.response;
 
-        if (status === 401) {
+        if (status === 401 && !this.isRerequest) {
+          this.isRerequest = true;
+
+          const authToken: Nullable<string> = SessionStorage.getItem(AUTH_KEY);
+
           error.config.headers = {
             "Content-Type": "application/json",
-            Authorization: `Bearer `,
+            Authorization: `Bearer ${authToken}`,
           };
 
           const response = await axiosInstance.request(error.config);
