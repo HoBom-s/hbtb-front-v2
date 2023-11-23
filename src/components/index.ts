@@ -29,6 +29,7 @@ import { Footer } from "./Footer/Footer";
 import { AdminLoginForm } from "./Form/AdminLoginForm";
 
 // Header
+import { AdminHeader } from "./Header/AdminHeader";
 import { Header } from "./Header/Header";
 
 // Modal
@@ -39,6 +40,9 @@ import { Paginator } from "./Paginator/Paginator";
 
 // RenderProps
 import { RenderProps } from "./RenderProps/RenderProps";
+
+// Sidebar
+import { AdminSidebar } from "./Sidebar/AdminSidebar";
 
 // TagItem
 import { TagItem } from "./TagItem/TagItem";
@@ -64,10 +68,12 @@ export {
   ApiErrorFallback,
   Footer,
   AdminLoginForm,
+  AdminHeader,
   Header,
   CommonModal,
   Paginator,
   RenderProps,
+  AdminSidebar,
   TagItem,
   TagItemFetch,
   TagItemSkeleton,
