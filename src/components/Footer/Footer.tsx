@@ -6,8 +6,19 @@ import { Flex, Box, Stack, Text, Button } from "@chakra-ui/react";
 // icons
 import { FaUser } from "react-icons/fa";
 
+// utils
+import { AUTH_KEY, SessionStorage } from "@/utils";
+
 export const Footer = () => {
   const navigate = useNavigate();
+
+  const handleAdminButtonClick = () => {
+    if (SessionStorage.getItem(AUTH_KEY)) {
+      navigate("/dashboard");
+    }
+
+    navigate("/admin");
+  };
 
   return (
     <Flex
@@ -22,7 +33,7 @@ export const Footer = () => {
           <Text as="b" color="gray.500">
             © HOBOM SERVICE.
           </Text>
-          <Box onClick={() => navigate("/admin")}>
+          <Box onClick={handleAdminButtonClick}>
             <Flex
               w="80px"
               flex={1}
