@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { AxiosRequestConfig } from "axios";
 
 // hooks
 import { useThrowAsyncError } from "..";
@@ -17,8 +18,9 @@ import { Nullable } from "@/types";
  * @returns {Nullable<FetchResult>}
  */
 export const useFetch = <Params, FetchResult>(
-  fetch: (params: Params) => Promise<FetchResult>,
+  fetch: (params: Params, config?: AxiosRequestConfig) => Promise<FetchResult>,
   params: Params,
+  config?: AxiosRequestConfig,
 ): Nullable<FetchResult> => {
   const [_promise, _setPromise] = useState<Promise<void>>();
   const [_status, _setStatus] = useState<"pending" | "fulfilled" | "error">(
@@ -41,7 +43,7 @@ export const useFetch = <Params, FetchResult>(
      * Error Boundary에서 잡아줄 수 있도록 Error handling
      */
     _setPromise(
-      fetch(params)
+      fetch(params, config)
         .then(resolve)
         .catch((e) => throwAsyncError(e)),
     );
