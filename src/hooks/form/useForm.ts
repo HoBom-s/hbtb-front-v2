@@ -22,6 +22,8 @@ interface UserForm {
   isValidForm: boolean;
 
   handleFormValueChange: (e: ChangeEvent<HTMLInputElement>) => void;
+
+  resetFormValue: () => void;
 }
 
 /**
@@ -29,7 +31,7 @@ interface UserForm {
  *      Form Element를 잘 컨트롤 하기 위한 hook
  *
  * @example
- *      const { formValue, isValidForm, handleFormValueChange } = useForm({
+ *      const { formValue, isValidForm, handleFormValueChange, resetFormValue } = useForm({
  *          "username": {
  *              type: "text",
  *              value: "",
@@ -85,9 +87,14 @@ export const useForm = (initialValue: Form): UserForm => {
     [formValue],
   );
 
+  const resetFormValue = useCallback(() => {
+    setFormValue(initialValue);
+  }, [initialValue]);
+
   return {
     formValue,
     isValidForm,
     handleFormValueChange,
+    resetFormValue,
   };
 };

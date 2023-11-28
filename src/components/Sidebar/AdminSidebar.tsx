@@ -1,13 +1,15 @@
+import { useNavigate } from "react-router-dom";
+
 // chakra
 import { Box, Flex, Button, Text } from "@chakra-ui/react";
 
 // icons
 import { MdDashboard } from "react-icons/md";
 import { FaPager } from "react-icons/fa";
-import { CiHashtag } from "react-icons/ci";
-import { MdCategory } from "react-icons/md";
 
 export const AdminSidebar = () => {
+  const navigate = useNavigate();
+
   return (
     <Box
       minH="calc(100vh - 50px)"
@@ -18,21 +20,24 @@ export const AdminSidebar = () => {
     >
       <Flex h="100%" flexDir="column">
         <Box flex={1} py="12px">
-          <Flex w="150px" alignItems="center" cursor="pointer">
+          <Flex
+            w="150px"
+            alignItems="center"
+            cursor="pointer"
+            onClick={() => navigate("/dashboard")}
+          >
             <MdDashboard />
             <Text pl="36px">DASHBOARD</Text>
           </Flex>
-          <Flex w="150px" mt="28px" alignItems="center" cursor="pointer">
+          <Flex
+            w="150px"
+            mt="28px"
+            alignItems="center"
+            cursor="pointer"
+            onClick={() => navigate("/")}
+          >
             <FaPager />
             <Text pl="36px">TECH PAGE</Text>
-          </Flex>
-          <Flex w="150px" mt="28px" alignItems="center" cursor="pointer">
-            <MdCategory />
-            <Text pl="36px">CATEGORY</Text>
-          </Flex>
-          <Flex w="150px" mt="28px" alignItems="center" cursor="pointer">
-            <CiHashtag />
-            <Text pl="36px">TAG</Text>
           </Flex>
         </Box>
         <Box>
