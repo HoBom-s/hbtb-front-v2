@@ -13,7 +13,14 @@ export const withAdminLayout = (Component: ComponentType) => {
         <AdminHeader />
         <Flex w="100%">
           <AdminSidebar />
-          <Box w="100%" minH="calc(100vh - 50px)" p="12px">
+          <Box
+            w="100%"
+            minH="calc(100vh - 50px)"
+            h="100%"
+            overflowY="auto"
+            maxH="calc(100vh - 50px)"
+            p="12px"
+          >
             <Component />
           </Box>
         </Flex>
