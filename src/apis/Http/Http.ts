@@ -63,9 +63,12 @@ export class Http implements HttpBase {
     }
   }
 
-  async del<Response>(url: string): Promise<Response> {
+  async del<Response>(
+    url: string,
+    config?: AxiosRequestConfig,
+  ): Promise<Response> {
     try {
-      const response = await this.fetcher.delete(url);
+      const response = await this.fetcher.delete(url, config);
 
       return response as Response;
     } catch (error) {
