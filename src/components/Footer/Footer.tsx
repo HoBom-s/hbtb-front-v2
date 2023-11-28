@@ -15,9 +15,9 @@ export const Footer = () => {
   const handleAdminButtonClick = () => {
     if (SessionStorage.getItem(AUTH_KEY)) {
       navigate("/dashboard");
+    } else {
+      navigate("/admin");
     }
-
-    navigate("/admin");
   };
 
   return (
