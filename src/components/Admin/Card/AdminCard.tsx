@@ -22,8 +22,8 @@ export const AdminCard = ({
   children,
 }: AdminCardProps) => {
   return (
-    <Box>
-      <Flex minW="270px" minH="70px" h="100%" w="100%">
+    <Box w="100%" flex={1}>
+      <Flex minW="270px" minH="70px" h="100%">
         <Box minW="70px" bgColor={leftBg}>
           <Flex justifyContent="center" alignItems="center" h="100%" w="100%">
             <Box fontSize="xl">{children}</Box>
