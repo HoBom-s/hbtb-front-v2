@@ -49,6 +49,7 @@ export const AdminSidebar = () => {
             _hover={{
               background: "none",
             }}
+            onClick={() => navigate("/publish")}
           >
             PUBLISH
           </Button>
