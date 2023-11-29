@@ -1,5 +1,7 @@
 // Admin
 import { AdminArticlesTable } from "./Admin/Articles/AdminArticlesTable";
+import { ArticleContentsEditor } from "./Admin/Articles/ArticleContentsEditor";
+import { ArticleContentsEditorSide } from "./Admin/Articles/ArticleContentsEditorSide";
 import { AdminCard } from "./Admin/Card/AdminCard";
 import { AdminFetch } from "./Admin/Fetch/AdminFetch";
 import { AdminTagCategoryFetch } from "./Admin/Fetch/AdminTagCategoryFetch";
@@ -62,6 +64,8 @@ import { TagItemSkeleton } from "./TagItem/Skeleton/TagItemSkeleton";
 
 export {
   AdminArticlesTable,
+  ArticleContentsEditor,
+  ArticleContentsEditorSide,
   AdminCard,
   AdminFetch,
   AdminTagCategoryFetch,
