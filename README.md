@@ -9,6 +9,8 @@ HoBom Tech Blog
 > Chakra UI
 >
 > Vite
+>
+> Recoil
 
 # Start
 
@@ -20,5 +22,9 @@ nvm install
 nvm use
 
 # Development react start
+npm run dev
+```
+
+```sh
 npm run dev
 ```
