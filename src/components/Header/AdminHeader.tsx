@@ -31,6 +31,12 @@ export const AdminHeader = () => {
     })();
   }, []);
 
+  const handleLogoutButtonClick = () => {
+    SessionStorage.clearAllItem();
+
+    navigate("/");
+  };
+
   return (
     <Box>
       <Box w="100%" h="50px" bgColor="#424242" boxShadow="lg">
@@ -47,6 +53,16 @@ export const AdminHeader = () => {
             </Text>
           </Box>
           <Box>
+            <Text
+              as="b"
+              fontSize="sm"
+              color="teal.100"
+              cursor="pointer"
+              pr="20px"
+              onClick={handleLogoutButtonClick}
+            >
+              LOGOUT
+            </Text>
             <Avatar
               loading="lazy"
               size="sm"
