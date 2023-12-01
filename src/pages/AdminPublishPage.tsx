@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, ChangeEvent, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 // chakra
 import {
@@ -11,16 +12,24 @@ import {
 } from "@chakra-ui/react";
 
 // hooks
-import { useForm } from "@/hooks";
+import { useForm, useModal } from "@/hooks";
 
 // components
-import { ArticleContentsEditor, ArticleContentsEditorSide } from "@/components";
+import {
+  ArticleContentsEditor,
+  ArticleContentsEditorSide,
+  CommonModal,
+} from "@/components";
 
 // api
-import { get } from "@/apis";
+import axios from "axios";
+import { get, post } from "@/apis";
+
+// utils
+import { SessionStorage, AUTH_KEY } from "@/utils";
 
 // types
-import type { Nullable, Tag } from "@/types";
+import type { Article, Auth, Nullable, Tag } from "@/types";
 
 const AdminPublishPage = () => {
   const { formValue, isValidForm, handleFormValueChange } = useForm({
@@ -49,6 +58,7 @@ const AdminPublishPage = () => {
       validate: (path) => path.charAt(0) === "/",
     },
   });
+  const { isModalOpen, handleModalOpenStateChange } = useModal();
 
   const [contents, setContents] = useState<string | undefined>("");
   const [fileValue, setFileValue] = useState<string>("");
@@ -56,6 +66,8 @@ const AdminPublishPage = () => {
   const [clickedTag, setClickedTag] = useState<Tag[]>([]);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -69,10 +81,25 @@ const AdminPublishPage = () => {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement;
 
-    setFileValue(value);
+    if (target.files && target.files.length) {
+      const file = target.files[0];
+      const formData = new FormData();
+
+      formData.append("file", file);
+      formData.append("upload_preset", import.meta.env.VITE_APP_CLOUD_PRESET);
+
+      const uploadResult = await axios.post(
+        `${import.meta.env.VITE_APP_CLOUDE_BASE_URL}/${
+          import.meta.env.VITE_APP_CLOUD_NAME
+        }/image/upload`,
+        formData,
+      );
+
+      setFileValue(uploadResult.data.secure_url);
+    }
   };
 
   const handleTagItemClick = useCallback(
@@ -92,8 +119,42 @@ const AdminPublishPage = () => {
     [clickedTag],
   );
 
-  const handlePostButtonClick = () => {
+  const handlePostButtonClick = async () => {
     if (!fileValue || !isValidForm || !clickedTag.length) {
+      handleModalOpenStateChange();
+
+      return;
+    }
+
+    const myInfo: Auth = await get("/user/me", {
+      headers: {
+        Authorization: `Bearer ${SessionStorage.getItem(AUTH_KEY)}`,
+      },
+    });
+
+    const createdArticle: Article = await post(
+      "/article/create",
+      {
+        thumbnail: fileValue,
+        title: formValue.title.value,
+        subtitle: formValue.subtitle.value,
+        contents: contents,
+        tags: clickedTag,
+        writers: [myInfo.nickname],
+        path: formValue.path.value,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${SessionStorage.getItem(AUTH_KEY)}`,
+        },
+      },
+    );
+
+    if (createdArticle._id) {
+      navigate("/dashboard");
+    } else {
+      handleModalOpenStateChange();
+
       return;
     }
   };
@@ -147,6 +208,7 @@ const AdminPublishPage = () => {
             clickedTag={clickedTag}
             fileInputRef={fileInputRef}
             formValue={formValue}
+            fileValue={fileValue}
             onTagItemClickEvent={handleTagItemClick}
             onTumbnailUploadClickEvent={handleTumbnailUploadClick}
             onFileInputChangeEvent={handleFileChange}
@@ -155,6 +217,12 @@ const AdminPublishPage = () => {
           />
         </Flex>
       </Box>
+      <CommonModal
+        isOpen={isModalOpen}
+        title="WARNING"
+        bodyContents="Please check article informations"
+        onModalCloseButtonClickEvent={handleModalOpenStateChange}
+      />
     </Box>
   );
 };

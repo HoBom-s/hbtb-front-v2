@@ -6,6 +6,7 @@ import {
   Heading,
   Input,
   InputGroup,
+  Image,
   Button,
   Icon,
   FormControl,
@@ -32,6 +33,8 @@ interface ArticleContentsEditorSideProps {
 
   formValue: Form;
 
+  fileValue: string;
+
   onTagItemClickEvent: (tag: Tag) => void;
 
   onTumbnailUploadClickEvent: () => void;
@@ -48,6 +51,7 @@ export const ArticleContentsEditorSide = ({
   clickedTag,
   fileInputRef,
   formValue,
+  fileValue,
   onTagItemClickEvent,
   onTumbnailUploadClickEvent,
   onFileInputChangeEvent,
@@ -132,6 +136,17 @@ export const ArticleContentsEditorSide = ({
               UPLOAD
             </Button>
           </InputGroup>
+          {fileValue && (
+            <Image
+              mt="20px"
+              src={fileValue}
+              loading="lazy"
+              borderRadius="8px"
+              boxSize="260px"
+              alt="upload_image"
+              objectFit="cover"
+            />
+          )}
         </Box>
         <Box mt="40px">
           <Button
