@@ -17,7 +17,7 @@ import { RenderProps, ArticleCard } from "@/components";
 import { get } from "@/apis";
 
 // types
-import type { Nullable, Article } from "@/types";
+import type { Nullable, Article, Tag } from "@/types";
 
 interface ArticleSearchFetchProps {
   searchKeyword: string;
@@ -30,6 +30,22 @@ export const ArticleSearchFetch = ({
     get,
     `/article/search${searchKeyword}`,
   );
+  const articles: Nullable<Article[]> = useFetch<string, Article[]>(
+    get,
+    "/article",
+  );
+
+  const searched: Nullable<Article[]> = (() => {
+    if (articleSearchResult && articles && articleSearchResult.length === 0) {
+      return articles.filter((article: Article) =>
+        article.tags.find(
+          (tag: Tag) => tag.title === searchKeyword.split("=")[1],
+        ),
+      );
+    }
+
+    return articleSearchResult;
+  })();
 
   const setArticlePost = useSetRecoilState(articlePost);
 
@@ -63,10 +79,10 @@ export const ArticleSearchFetch = ({
           },
         }}
       >
-        {articleSearchResult && articleSearchResult.length > 0 ? (
+        {searched ? (
           <RenderProps
             className="search-render-list"
-            items={articleSearchResult || []}
+            items={searched || []}
             render={(item: Article) => {
               return (
                 <ArticleCard

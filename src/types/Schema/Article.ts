@@ -1,5 +1,5 @@
 // Author
-import type { Author } from "..";
+import type { Author, Tag } from "..";
 
 export interface Article {
   _id: string;
@@ -12,7 +12,7 @@ export interface Article {
 
   contents: string;
 
-  tags: string[];
+  tags: Tag[];
 
   writers: Author[];
 

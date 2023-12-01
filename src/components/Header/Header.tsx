@@ -147,6 +147,7 @@ export const Header = () => {
               bg="transparent"
               color="white"
               _hover={{ bg: "transparent" }}
+              onClick={() => navigate("/")}
             >
               <Text as="b" fontSize="xl" borderBottom="3px solid orange">
                 TECH

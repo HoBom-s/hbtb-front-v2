@@ -18,6 +18,7 @@ const ArticleSearchResultMain = lazy(
 const AdminLoginMain = lazy(() => import("@/pages/AdminLoginPage"));
 const AdminDashBoardPage = lazy(() => import("@/pages/AdminDashboardPage"));
 const AdminPublishPage = lazy(() => import("@/pages/AdminPublishPage"));
+const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 
 // hoc
 import { withLayout, withAdminLayout } from "@/hoc";
@@ -64,6 +65,7 @@ export const PublicRouter = () => {
               </PrivateRouter>
             }
           />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </Suspense>
