@@ -26,7 +26,7 @@ export default defineConfig({
     alias: [{ find: "@", replacement: path.resolve(__dirname, "src") }],
   },
   build: {
-    outDir: path.join(__dirname, "dst"),
+    outDir: path.join(__dirname, "dist"),
 
     // Build 후 기존 소스코드 원복 불가
     sourcemap: true,
