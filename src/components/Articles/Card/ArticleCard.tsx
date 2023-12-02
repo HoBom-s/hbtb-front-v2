@@ -50,7 +50,7 @@ export const ArticleCard = memo(
   }: ArticleCardProps) => {
     return (
       <Card
-        minW="300px"
+        minW="180px"
         maxW="700px"
         w="100%"
         cursor="pointer"
@@ -64,7 +64,7 @@ export const ArticleCard = memo(
               src={thumbnail}
               alt={title}
               w="100%"
-              minW="200px"
+              minW="100px"
               maxW="280px"
               h="190x"
               maxH="190px"

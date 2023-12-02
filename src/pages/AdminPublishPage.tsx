@@ -1,4 +1,11 @@
-import { useState, useEffect, useRef, ChangeEvent, useCallback } from "react";
+import {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  ChangeEvent,
+  useCallback,
+} from "react";
 import { useNavigate } from "react-router-dom";
 
 // chakra
@@ -64,6 +71,7 @@ const AdminPublishPage = () => {
   const [fileValue, setFileValue] = useState<string>("");
   const [tags, setTags] = useState<Tag[]>([]);
   const [clickedTag, setClickedTag] = useState<Tag[]>([]);
+  const [isDesktopMode, setIsDesktopMode] = useState<boolean>(true);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -80,6 +88,18 @@ const AdminPublishPage = () => {
   const handleTumbnailUploadClick = () => {
     fileInputRef.current?.click();
   };
+
+  useLayoutEffect(() => {
+    const match = window.matchMedia("(min-width: 1120px)");
+
+    match.addEventListener("change", () => {
+      if (match.matches) {
+        setIsDesktopMode(true);
+      } else {
+        setIsDesktopMode(false);
+      }
+    });
+  }, []);
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
@@ -197,25 +217,48 @@ const AdminPublishPage = () => {
           )}
         </FormControl>
       </Flex>
-      <Box w="100%" mt={3}>
-        <Flex gap={5}>
-          <ArticleContentsEditor
-            contents={contents}
-            setContents={setContents}
-          />
-          <ArticleContentsEditorSide
-            tags={tags}
-            clickedTag={clickedTag}
-            fileInputRef={fileInputRef}
-            formValue={formValue}
-            fileValue={fileValue}
-            onTagItemClickEvent={handleTagItemClick}
-            onTumbnailUploadClickEvent={handleTumbnailUploadClick}
-            onFileInputChangeEvent={handleFileChange}
-            onPostButtonClickEvent={handlePostButtonClick}
-            onFormValueChangeEvent={handleFormValueChange}
-          />
-        </Flex>
+      <Box w="100%" mt={4}>
+        {isDesktopMode ? (
+          <Flex gap={5}>
+            <ArticleContentsEditor
+              contents={contents}
+              setContents={setContents}
+            />
+            <ArticleContentsEditorSide
+              tags={tags}
+              clickedTag={clickedTag}
+              fileInputRef={fileInputRef}
+              formValue={formValue}
+              fileValue={fileValue}
+              onTagItemClickEvent={handleTagItemClick}
+              onTumbnailUploadClickEvent={handleTumbnailUploadClick}
+              onFileInputChangeEvent={handleFileChange}
+              onPostButtonClickEvent={handlePostButtonClick}
+              onFormValueChangeEvent={handleFormValueChange}
+            />
+          </Flex>
+        ) : (
+          <Box>
+            <ArticleContentsEditorSide
+              tags={tags}
+              clickedTag={clickedTag}
+              fileInputRef={fileInputRef}
+              formValue={formValue}
+              fileValue={fileValue}
+              onTagItemClickEvent={handleTagItemClick}
+              onTumbnailUploadClickEvent={handleTumbnailUploadClick}
+              onFileInputChangeEvent={handleFileChange}
+              onPostButtonClickEvent={handlePostButtonClick}
+              onFormValueChangeEvent={handleFormValueChange}
+            />
+            <Box pt="20px">
+              <ArticleContentsEditor
+                contents={contents}
+                setContents={setContents}
+              />
+            </Box>
+          </Box>
+        )}
       </Box>
       <CommonModal
         isOpen={isModalOpen}

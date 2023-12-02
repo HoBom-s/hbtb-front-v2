@@ -51,7 +51,7 @@ export const ArticleRecentCard = memo(
     return (
       <Card
         maxW="sm"
-        w="380px"
+        minW="180px"
         cursor="pointer"
         onClick={() =>
           onArticleRecentCardClickEvent(title, subtitle, thumbnail, path)

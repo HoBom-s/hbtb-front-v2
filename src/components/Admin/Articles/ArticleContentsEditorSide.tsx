@@ -60,7 +60,20 @@ export const ArticleContentsEditorSide = ({
 }: ArticleContentsEditorSideProps) => {
   return (
     <Box>
-      <Box minW="280px" w="100%" maxW="280px">
+      <Box
+        minW="280px"
+        w="100%"
+        maxW="280px"
+        sx={{
+          "@media screen and (max-width: 1120px)": {
+            width: "100%",
+            maxWidth: "100%",
+            display: "flex",
+            flex: 1,
+            flexWrap: "wrap",
+          },
+        }}
+      >
         <Box mb="30px">
           <FormControl
             isRequired
@@ -148,7 +161,16 @@ export const ArticleContentsEditorSide = ({
             />
           )}
         </Box>
-        <Box mt="40px">
+        <Box
+          mt="40px"
+          sx={{
+            "@media screen and (max-width: 1120px)": {
+              marginLeft: "auto",
+              marginTop: "20px",
+              paddingBottom: "20px",
+            },
+          }}
+        >
           <Button
             w="100%"
             h="50px"

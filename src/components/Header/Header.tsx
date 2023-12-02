@@ -167,7 +167,8 @@ export const Header = () => {
       {isSearchOpen && headerScrollPosition < 84 && (
         <Box
           w="100%"
-          height="420px"
+          h="100%"
+          maxH="420px"
           top="0"
           left="0"
           zIndex={1}
@@ -177,6 +178,7 @@ export const Header = () => {
         >
           <Box
             h="100%"
+            w="100%"
             display="flex"
             justifyContent="center"
             alignItems="center"
@@ -203,7 +205,7 @@ export const Header = () => {
             <ApiErrorBoundary Fallback={ApiErrorFallback}>
               <Suspense
                 fallback={
-                  <Flex py="24px" maxW="1200px" gap={2}>
+                  <Flex py="24px" w="100%" maxW="1200px" gap={2}>
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num: number) => (
                       <TagItemSkeleton key={num} />
                     ))}
@@ -216,10 +218,11 @@ export const Header = () => {
           </Box>
         </Box>
       )}
-      <Box w="100%" h="420px" top={0} left={0} zIndex={0}>
+      <Box w="100%" h="100%" maxH="420px" top={0} left={0} zIndex={0}>
         <Image
           w="100%"
-          h="420px"
+          h="100%"
+          maxH="420px"
           src={headerInformation.thumbnail}
           filter={
             headerInformation.thumbnail === MainImage
@@ -230,7 +233,7 @@ export const Header = () => {
           position="absolute"
         />
         <Box
-          w={[300, 600, 1200]}
+          w="auto"
           h="420px"
           position="relative"
           display="flex"

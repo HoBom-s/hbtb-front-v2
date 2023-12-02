@@ -54,6 +54,11 @@ export const Footer = () => {
           color="gray.500"
           borderRadius={4}
           borderColor="gray.500"
+          sx={{
+            "@media screen and (max-width: 499px)": {
+              display: "none",
+            },
+          }}
         >
           <Text as="b">HoBom's Family</Text>
         </Button>
