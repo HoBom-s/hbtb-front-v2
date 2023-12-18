@@ -2,7 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // chakra
-import { Box, Heading, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Text,
+  Breadcrumb,
+  BreadcrumbItem,
+} from "@chakra-ui/react";
 
 // hooks
 import { useFetch, useModal } from "@/hooks";
@@ -34,8 +40,12 @@ export const ArticleDetailFetch = ({ path }: ArticleDetailFetchProps) => {
 
   const navigate = useNavigate();
 
-  const handleUpdateButtonClick = (_id: string) => {
-    handleModalOpenStateChange();
+  const handleUpdateButtonClick = (path: string) => {
+    navigate(`/edit`, {
+      state: {
+        path: path,
+      },
+    });
   };
 
   const handleDeleteButtonClick = (_id: string) => {
@@ -73,15 +83,36 @@ export const ArticleDetailFetch = ({ path }: ArticleDetailFetchProps) => {
             <Text as="sub">
               {articleContentsResult.createdAt.split("T")[0]}
             </Text>
+            <Breadcrumb>
+              <BreadcrumbItem>
+                <Text
+                  color="teal"
+                  cursor="pointer"
+                  onClick={() =>
+                    handleUpdateButtonClick(articleContentsResult.path)
+                  }
+                >
+                  Edit
+                </Text>
+              </BreadcrumbItem>
+              <BreadcrumbItem>
+                <Text
+                  color="red"
+                  cursor="pointer"
+                  onClick={() =>
+                    handleDeleteButtonClick(articleContentsResult._id)
+                  }
+                >
+                  Delete
+                </Text>
+              </BreadcrumbItem>
+            </Breadcrumb>
           </Box>
           <ArticleDetail
-            _id={articleContentsResult._id}
             contents={articleContentsResult.contents}
             authorThumbnail={articleContentsResult.writers[0].profileImg}
             authorNickname={articleContentsResult.writers[0].nickname}
             authorIntroduction={articleContentsResult.writers[0].introduction}
-            onUpdateButtonClickEvent={handleUpdateButtonClick}
-            onDeleteButtonClickEvent={handleDeleteButtonClick}
           />
         </Box>
       )}

@@ -18,6 +18,7 @@ const ArticleSearchResultMain = lazy(
 const AdminLoginMain = lazy(() => import("@/pages/AdminLoginPage"));
 const AdminDashBoardPage = lazy(() => import("@/pages/AdminDashboardPage"));
 const AdminPublishPage = lazy(() => import("@/pages/AdminPublishPage"));
+const AdminEditPage = lazy(() => import("@/pages/AdminEditPage"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 
 // hoc
@@ -31,6 +32,7 @@ const LayoutArticleDetailMain = withLayout(ArticleDetailMain);
 const LayoutArticleSearchResultMain = withLayout(ArticleSearchResultMain);
 const LayoutAdminDashBoardMain = withAdminLayout(AdminDashBoardPage);
 const LayoutAdminPublishMain = withAdminLayout(AdminPublishPage);
+const LayoutAdminEditMain = withAdminLayout(AdminEditPage);
 
 const SuspenseSpinnerSection = () => {
   return (
@@ -62,6 +64,14 @@ export const PublicRouter = () => {
             element={
               <PrivateRouter>
                 <LayoutAdminPublishMain />
+              </PrivateRouter>
+            }
+          />
+          <Route
+            path="/edit"
+            element={
+              <PrivateRouter>
+                <LayoutAdminEditMain />
               </PrivateRouter>
             }
           />
