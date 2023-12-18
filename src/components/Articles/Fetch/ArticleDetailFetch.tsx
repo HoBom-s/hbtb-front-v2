@@ -83,30 +83,32 @@ export const ArticleDetailFetch = ({ path }: ArticleDetailFetchProps) => {
             <Text as="sub">
               {articleContentsResult.createdAt.split("T")[0]}
             </Text>
-            <Breadcrumb>
-              <BreadcrumbItem>
-                <Text
-                  color="teal"
-                  cursor="pointer"
-                  onClick={() =>
-                    handleUpdateButtonClick(articleContentsResult.path)
-                  }
-                >
-                  Edit
-                </Text>
-              </BreadcrumbItem>
-              <BreadcrumbItem>
-                <Text
-                  color="red"
-                  cursor="pointer"
-                  onClick={() =>
-                    handleDeleteButtonClick(articleContentsResult._id)
-                  }
-                >
-                  Delete
-                </Text>
-              </BreadcrumbItem>
-            </Breadcrumb>
+            {SessionStorage.getItem(AUTH_KEY) && (
+              <Breadcrumb>
+                <BreadcrumbItem>
+                  <Text
+                    color="teal"
+                    cursor="pointer"
+                    onClick={() =>
+                      handleUpdateButtonClick(articleContentsResult.path)
+                    }
+                  >
+                    Edit
+                  </Text>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                  <Text
+                    color="red"
+                    cursor="pointer"
+                    onClick={() =>
+                      handleDeleteButtonClick(articleContentsResult._id)
+                    }
+                  >
+                    Delete
+                  </Text>
+                </BreadcrumbItem>
+              </Breadcrumb>
+            )}
           </Box>
           <ArticleDetail
             contents={articleContentsResult.contents}
