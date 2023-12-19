@@ -7,4 +7,7 @@ import { SessionStorage } from "./Storage/SessionStorage";
 // validation
 import { Validation } from "./Validation/Validation";
 
-export { AUTH_KEY, SessionStorage, Validation };
+// Uid generator
+import { generateUid } from "./generateUid";
+
+export { AUTH_KEY, SessionStorage, Validation, generateUid };
