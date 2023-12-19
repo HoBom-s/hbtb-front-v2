@@ -46,8 +46,6 @@ interface OverlayHook {
 export const useOverlay = (): OverlayHook => {
   const overlayContext = useContext(OverlayContext);
 
-  console.log(overlayContext);
-
   if (!overlayContext) {
     throw new Error("overlay hook must be exist but got null !");
   }
