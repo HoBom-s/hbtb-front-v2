@@ -10,7 +10,9 @@ import { useForm } from "./form/useForm";
 // modal
 import { useModal } from "./modal/useModal";
 
+import { useOverlay } from "./overlay/useOverlay";
+
 // types
 import type { Form } from "./form/useForm";
 
-export { useThrowAsyncError, useFetch, useForm, useModal, Form };
+export { useThrowAsyncError, useFetch, useForm, useModal, useOverlay, Form };
