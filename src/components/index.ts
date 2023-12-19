@@ -48,6 +48,9 @@ import { CommonChildrenModal } from "./Modal/CommonChildrenModal";
 import { CommonConfirmModal } from "./Modal/CommonConfirmModal";
 import { CommonModal } from "./Modal/CommonModal";
 
+// Overlay
+import { OverlayHandler } from "./Overlay/OverlayHandler";
+
 // Paginator
 import { Paginator } from "./Paginator/Paginator";
 
@@ -95,6 +98,7 @@ export {
   CommonChildrenModal,
   CommonConfirmModal,
   CommonModal,
+  OverlayHandler,
   Paginator,
   RenderProps,
   AdminSidebar,
