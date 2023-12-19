@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Flex } from "@chakra-ui/react";
 
 // hooks
-import { useForm, useModal } from "@/hooks";
+import { useForm, useOverlay } from "@/hooks";
 
 // components
 import { AdminLoginForm, CommonModal } from "@/components";
@@ -40,7 +40,7 @@ const AdminLoginPage = () => {
     },
   });
 
-  const { isModalOpen, handleModalOpenStateChange } = useModal();
+  const loginAlertOverlay = useOverlay();
 
   const navigate = useNavigate();
 
@@ -56,8 +56,18 @@ const AdminLoginPage = () => {
     e.preventDefault();
 
     if (!isValidForm) {
-      handleModalOpenStateChange();
-      return;
+      const { onOpenEvent } = loginAlertOverlay;
+
+      onOpenEvent(({ isOpen, onCloseEvent }) => {
+        return (
+          <CommonModal
+            isOpen={isOpen}
+            title="WARNING"
+            bodyContents="사용자 입력 정보를 다시 확인해 주세요."
+            onModalCloseButtonClickEvent={onCloseEvent}
+          />
+        );
+      });
     }
 
     const { username, password } = formValue;
@@ -74,7 +84,18 @@ const AdminLoginPage = () => {
     } catch (e: unknown) {
       console.error(e);
 
-      handleModalOpenStateChange();
+      const { onOpenEvent } = loginAlertOverlay;
+
+      onOpenEvent(({ isOpen, onCloseEvent }) => {
+        return (
+          <CommonModal
+            isOpen={isOpen}
+            title="WARNING"
+            bodyContents="사용자 입력 정보를 다시 확인해 주세요."
+            onModalCloseButtonClickEvent={onCloseEvent}
+          />
+        );
+      });
     }
   };
 
@@ -94,12 +115,6 @@ const AdminLoginPage = () => {
           onAuthLoginFormSubmitEvent={handleAuthLoginFormSubmit}
         />
       </Flex>
-      <CommonModal
-        isOpen={isModalOpen}
-        title="WARNING"
-        bodyContents="사용자 입력 정보를 다시 확인해 주세요."
-        onModalCloseButtonClickEvent={handleModalOpenStateChange}
-      />
     </Box>
   );
 };
