@@ -9,6 +9,9 @@ import { Flex } from "@chakra-ui/react";
 // router
 import { PrivateRouter } from "..";
 
+// context
+import { OverlayProvider } from "@/context";
+
 // pages
 const ArticleMain = lazy(() => import("@/pages/ArticleMainPage"));
 const ArticleDetailMain = lazy(() => import("@/pages/ArticleDetailPage"));
@@ -50,7 +53,14 @@ export const PublicRouter = () => {
           <Route path="/" element={<LayoutArticleMain />} />
           <Route path="/post/:path" element={<LayoutArticleDetailMain />} />
           <Route path="/search" element={<LayoutArticleSearchResultMain />} />
-          <Route path="/admin" element={<AdminLoginMain />} />
+          <Route
+            path="/admin"
+            element={
+              <OverlayProvider>
+                <AdminLoginMain />
+              </OverlayProvider>
+            }
+          />
           <Route
             path="/dashboard"
             element={
