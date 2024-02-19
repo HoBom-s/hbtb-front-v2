@@ -29,12 +29,7 @@ interface ArticleCardProps {
 
   createdAt: string;
 
-  onArticleCardClickEvent: (
-    title: string,
-    subtitle: string,
-    thumbnail: string,
-    path: string,
-  ) => void;
+  onArticleCardClickEvent: (path: string) => void;
 }
 
 export const ArticleCard = memo(
@@ -54,9 +49,7 @@ export const ArticleCard = memo(
         maxW="700px"
         w="100%"
         cursor="pointer"
-        onClick={() =>
-          onArticleCardClickEvent(title, subtitle, thumbnail, path)
-        }
+        onClick={() => onArticleCardClickEvent(path)}
       >
         <CardBody p={0}>
           <Flex flexDir="row" alignItems="center">

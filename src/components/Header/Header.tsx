@@ -2,16 +2,11 @@ import {
   useState,
   useEffect,
   useCallback,
-  useMemo,
   ChangeEvent,
   KeyboardEvent,
   Suspense,
 } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-
-// recoil
-import { useRecoilValue } from "recoil";
-import { ArticlePost, articlePostSelector } from "@/store";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 
 // chakra
 import {
@@ -37,43 +32,60 @@ import {
   TagItemSkeleton,
 } from "..";
 
+// apis
+import { get } from "@/apis";
+
 // images
 import MainImage from "@/assets/main-bg.jpg";
 
 // types
 import type { Tag } from "@/types";
 
+interface ArticlePost {
+  title: string;
+  subtitle: string;
+  thumbnail: string;
+}
+
 export const Header = () => {
   const [headerScrollPosition, setHeaderScrollPosition] = useState<number>(0);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
-
-  const articlePost: ArticlePost = useRecoilValue(articlePostSelector);
+  const [headerInformation, setHeaderInformation] = useState<ArticlePost>({
+    title: "",
+    subtitle: "",
+    thumbnail: "",
+  });
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { path } = useParams();
 
-  const headerInformation: ArticlePost = useMemo(() => {
-    const { title, subtitle, thumbnail } = articlePost;
+  useEffect(() => {
+    (async () => {
+      const article: ArticlePost = await get(`/article/find/${path}`);
 
-    const { pathname } = location;
+      const { pathname } = location;
 
-    const currentPath: string = pathname.split("/")[1];
+      const currentPath: string = pathname.split("/")[1];
 
-    if (currentPath === "post") {
-      return {
-        title: title,
-        subtitle: subtitle,
-        thumbnail: thumbnail,
-      };
-    }
+      if (currentPath === "post") {
+        const { title, subtitle, thumbnail } = article;
 
-    return {
-      title: "Tech Blog",
-      subtitle: "HoBom 서비스의 기술과 노하우를 공유합니다.",
-      thumbnail: MainImage,
-    };
-  }, [location, articlePost]);
+        setHeaderInformation({
+          title: title,
+          subtitle: subtitle,
+          thumbnail: thumbnail,
+        });
+      } else {
+        setHeaderInformation({
+          title: "Tech Blog",
+          subtitle: "HoBom 서비스의 기술과 노하우를 공유합니다.",
+          thumbnail: MainImage,
+        });
+      }
+    })();
+  }, [location, path]);
 
   useEffect(() => {
     window.addEventListener("scroll", () => {

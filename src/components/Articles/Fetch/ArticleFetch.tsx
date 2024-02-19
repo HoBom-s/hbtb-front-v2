@@ -1,10 +1,6 @@
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
-// recoil
-import { useSetRecoilState } from "recoil";
-import { articlePost } from "@/store";
-
 // chakra
 import { Box } from "@chakra-ui/react";
 
@@ -39,22 +35,9 @@ export const ArticleFetch = () => {
     `/article/list?pageNumber=${curPageNumber}&perPage=${PER_PAGE_NUMBER}`,
   );
 
-  const setArticlePost = useSetRecoilState(articlePost);
-
   const navigate = useNavigate();
 
-  const handleArticleCardClick = (
-    title: string,
-    subtitle: string,
-    thumbnail: string,
-    path: string,
-  ) => {
-    setArticlePost({
-      title: title,
-      subtitle: subtitle,
-      thumbnail: thumbnail,
-    });
-
+  const handleArticleCardClick = (path: string) => {
     navigate(`/post${path}`);
   };
 

@@ -1,9 +1,5 @@
 import { useNavigate } from "react-router-dom";
 
-// recoil
-import { useSetRecoilState } from "recoil";
-import { articlePost } from "@/store";
-
 // chakra
 import { Box, Text } from "@chakra-ui/react";
 
@@ -47,22 +43,9 @@ export const ArticleSearchFetch = ({
     return articleSearchResult;
   })();
 
-  const setArticlePost = useSetRecoilState(articlePost);
-
   const navigate = useNavigate();
 
-  const handleArticleSearchCardClick = (
-    title: string,
-    subtitle: string,
-    thumbnail: string,
-    path: string,
-  ) => {
-    setArticlePost({
-      title: title,
-      subtitle: subtitle,
-      thumbnail: thumbnail,
-    });
-
+  const handleArticleSearchCardClick = (path: string) => {
     navigate(`/post${path}`);
   };
 

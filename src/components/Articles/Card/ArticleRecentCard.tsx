@@ -19,8 +19,6 @@ interface ArticleRecentCardProps {
 
   title: string;
 
-  subtitle: string;
-
   authorNickname: string;
 
   authorThumbnail: string;
@@ -29,19 +27,13 @@ interface ArticleRecentCardProps {
 
   createdAt: string;
 
-  onArticleRecentCardClickEvent: (
-    title: string,
-    subtitle: string,
-    thumbnail: string,
-    path: string,
-  ) => void;
+  onArticleRecentCardClickEvent: (path: string) => void;
 }
 
 export const ArticleRecentCard = memo(
   ({
     thumbnail,
     title,
-    subtitle,
     authorNickname,
     authorThumbnail,
     path,
@@ -53,9 +45,7 @@ export const ArticleRecentCard = memo(
         maxW="sm"
         minW="180px"
         cursor="pointer"
-        onClick={() =>
-          onArticleRecentCardClickEvent(title, subtitle, thumbnail, path)
-        }
+        onClick={() => onArticleRecentCardClickEvent(path)}
       >
         <CardBody p={0}>
           <Image
