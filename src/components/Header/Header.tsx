@@ -235,6 +235,7 @@ export const Header = () => {
           w="100%"
           h="100%"
           maxH="420px"
+          fallbackSrc={MainImage}
           src={headerInformation.thumbnail}
           filter={
             headerInformation.thumbnail === MainImage

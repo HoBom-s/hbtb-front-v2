@@ -9,8 +9,6 @@ HoBom Tech Blog
 > Chakra UI
 >
 > Vite
->
-> Recoil
 
 # Start
 
