@@ -1,25 +1,102 @@
-import axios, { AxiosInstance, AxiosRequestConfig, isAxiosError } from "axios";
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  HttpStatusCode,
+  isAxiosError,
+} from "axios";
 
-// http
-import { HttpError } from "../HttpError/HttpError";
-
-// utils
-import { AUTH_KEY, SessionStorage } from "@/utils";
-
-// types
 import type { HttpBase } from "./HttpBase";
-import type { Nullable } from "@/types";
+
+const RETRY_TIME_COUNT: number = 500;
+const AXIOS_TIMEOUT: number = 3000;
 
 export class Http implements HttpBase {
-  // 한 번만 다시 재요청 보냄
-  private isRerequest: boolean;
+  readonly _instance = Symbol.for("Http");
 
   private fetcher: AxiosInstance;
 
-  constructor() {
-    this.isRerequest = false;
+  private retryMaxCount: number = 3;
 
-    this.fetcher = this.initializeAxios();
+  private retryCount: number = 0;
+
+  constructor() {
+    this.fetcher = axios.create({
+      baseURL: import.meta.env.VITE_APP_SERVER_HOST,
+      timeout: AXIOS_TIMEOUT,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    this.fetcher.interceptors.request.use(
+      (req) => {
+        if (req.data && req.data instanceof FormData) {
+          req.headers["Content-Type"] = "multipart/form-data";
+        }
+
+        return req;
+      },
+      (err) => {
+        if (isAxiosError(err)) {
+          if (err.status === HttpStatusCode.NotFound) {
+            alert(
+              `Cannot find endpoint :: ${err.config?.baseURL} ${err.config?.url}`,
+            );
+          }
+        } else {
+          throw err;
+        }
+      },
+    );
+
+    this.fetcher.interceptors.response.use(
+      (res) => {
+        this.retryCount = 3;
+        return res.data;
+      },
+      (err) => {
+        if (isAxiosError(err) && err.response) {
+          switch (err.response.status) {
+            case HttpStatusCode.BadRequest:
+              console.error(`Bad request :: ${err.config?.data}`);
+              break;
+
+            case HttpStatusCode.NotFound:
+              while (this.retryCount++ < this.retryMaxCount)
+                this.backoffRequest(
+                  RETRY_TIME_COUNT * this.retryCount,
+                  err.config as AxiosRequestConfig,
+                );
+              break;
+
+            case HttpStatusCode.Unauthorized:
+              console.error(`Unauthorized :: ${err.config?.headers}`);
+              break;
+
+            case HttpStatusCode.Forbidden:
+              console.error(`Forbidden :: ${err.config?.headers}`);
+              break;
+
+            case HttpStatusCode.BadGateway:
+              while (this.retryCount++ < this.retryMaxCount)
+                this.backoffRequest(
+                  RETRY_TIME_COUNT * this.retryCount,
+                  err.config as AxiosRequestConfig,
+                );
+              break;
+
+            default:
+              console.error(
+                `Error :: status: ${err.status} message: ${err.message}`,
+              );
+              break;
+          }
+        } else {
+          throw err;
+        }
+      },
+    );
   }
 
   async get<Response>(
@@ -30,36 +107,36 @@ export class Http implements HttpBase {
       const response = await this.fetcher.get(url, config);
 
       return response as Response;
-    } catch (error) {
-      return this.handlePromiseError(error);
+    } catch (err) {
+      throw this.handleError(err);
     }
   }
 
   async post<Request, Response>(
     url: string,
-    data: Request,
+    body: Request,
     config?: AxiosRequestConfig,
   ): Promise<Response> {
     try {
-      const response = await this.fetcher.post(url, data, config);
+      const response = await this.fetcher.post(url, body, config);
 
       return response as Response;
-    } catch (error) {
-      return this.handlePromiseError(error);
+    } catch (err) {
+      throw this.handleError(err);
     }
   }
 
   async patch<Request, Response>(
     url: string,
-    data: Request,
+    body: Request,
     config?: AxiosRequestConfig,
   ): Promise<Response> {
     try {
-      const response = await this.fetcher.patch(url, data, config);
+      const response = await this.fetcher.patch(url, body, config);
 
       return response as Response;
-    } catch (error) {
-      return this.handlePromiseError(error);
+    } catch (err) {
+      throw this.handleError(err);
     }
   }
 
@@ -71,74 +148,22 @@ export class Http implements HttpBase {
       const response = await this.fetcher.delete(url, config);
 
       return response as Response;
-    } catch (error) {
-      return this.handlePromiseError(error);
+    } catch (err) {
+      throw this.handleError(err);
     }
   }
 
-  private initializeAxios(): AxiosInstance {
-    const axiosInstance: AxiosInstance = axios.create({
-      baseURL: import.meta.env.VITE_APP_SERVER_HOST,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      timeout: 3000,
-    });
-
-    axiosInstance.interceptors.request.use(
-      (config) => {
-        config.headers["Content-Type"] = "application/json";
-
-        return config;
-      },
-      (error) => {
-        if (isAxiosError(error)) {
-          return Promise.reject(new HttpError(error).toJSON());
-        }
-
-        return Promise.reject(error);
-      },
-    );
-
-    axiosInstance.interceptors.response.use(
-      (response) => {
-        return response.data;
-      },
-      async (error) => {
-        const { status } = error.response;
-
-        if (status === 401 && !this.isRerequest) {
-          this.isRerequest = true;
-
-          const authToken: Nullable<string> = SessionStorage.getItem(AUTH_KEY);
-
-          error.config.headers = {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          };
-
-          const response = await axiosInstance.request(error.config);
-          const { data } = response;
-
-          return data;
-        }
-
-        if (isAxiosError(error)) {
-          return Promise.reject(new HttpError(error).toJSON());
-        }
-
-        return Promise.reject(error);
-      },
-    );
-
-    return axiosInstance;
-  }
-
-  private handlePromiseError(e: unknown): Promise<never> {
+  private handleError(e: unknown): Promise<never> {
     if (isAxiosError(e)) {
-      return Promise.reject(new HttpError(e).toJSON());
+      return Promise.reject(new AxiosError(e.message).toJSON());
     }
 
     return Promise.reject(e);
+  }
+
+  private async backoffRequest(times: number, config: AxiosRequestConfig) {
+    setTimeout(async () => {
+      await this.fetcher.request(config);
+    }, times);
   }
 }
