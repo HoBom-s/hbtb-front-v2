@@ -2,7 +2,7 @@
 import type { Author, Tag } from "..";
 
 export interface Article {
-  _id: string;
+  id: string;
 
   thumbnail: string;
 
@@ -14,7 +14,7 @@ export interface Article {
 
   tags: Tag[];
 
-  writers: Author[];
+  user: Author;
 
   path: string;
 

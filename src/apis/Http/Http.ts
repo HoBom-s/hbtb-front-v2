@@ -53,7 +53,7 @@ export class Http implements HttpBase {
     this.fetcher.interceptors.response.use(
       (res) => {
         this.retryCount = 3;
-        return res.data;
+        return res.data.data;
       },
       (err) => {
         if (isAxiosError(err) && err.response) {

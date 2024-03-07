@@ -17,9 +17,10 @@ import { get } from "@/apis";
 import type { Nullable, Article } from "@/types";
 
 interface ArticleFetchResult {
-  articles: Nullable<Article[]>;
-
-  totalPageNumber: 2;
+  articlesAndPageCount: {
+    foundArticles: Nullable<Article[]>;
+    totalPageCount: number;
+  };
 }
 
 export const ArticleFetch = () => {
@@ -32,7 +33,7 @@ export const ArticleFetch = () => {
     ArticleFetchResult
   >(
     get,
-    `/article/list?pageNumber=${curPageNumber}&perPage=${PER_PAGE_NUMBER}`,
+    `/api/v2/articles/list?pageNumber=${curPageNumber}&perPage=${PER_PAGE_NUMBER}`,
   );
 
   const navigate = useNavigate();
@@ -51,7 +52,9 @@ export const ArticleFetch = () => {
 
   const handleFowardButtonClick = useCallback(() => {
     if (articlesResult) {
-      if (articlesResult.totalPageNumber === curPageNumber) {
+      if (
+        articlesResult.articlesAndPageCount.totalPageCount === curPageNumber
+      ) {
         return;
       }
     }
@@ -78,17 +81,17 @@ export const ArticleFetch = () => {
       {articlesResult && (
         <RenderProps
           className="article-render-list"
-          items={articlesResult.articles || []}
+          items={articlesResult?.articlesAndPageCount.foundArticles || []}
           render={(item: Article) => {
             return (
               <ArticleCard
                 thumbnail={item.thumbnail}
                 title={item.title}
                 subtitle={item.subtitle}
-                authorNickname={item.writers[0].nickname}
-                authorThumbnail={item.writers[0].profileImg}
-                path={item.path}
+                authorNickname={item.user.nickname}
+                authorThumbnail={item.user.profileImg}
                 onArticleCardClickEvent={handleArticleCardClick}
+                path={item.path}
                 createdAt={item.createdAt.split("T")[0]}
               />
             );
@@ -99,7 +102,9 @@ export const ArticleFetch = () => {
         {articlesResult && (
           <Paginator
             curPageNumber={curPageNumber}
-            totalPageNumber={articlesResult?.totalPageNumber}
+            totalPageNumber={
+              articlesResult?.articlesAndPageCount.totalPageCount
+            }
             onBackButtonClickEvent={handleBackButtonClick}
             onFowardButtonClickEvent={handleFowardButtonClick}
             onPageButtonClickEvent={handlePageButtonClick}

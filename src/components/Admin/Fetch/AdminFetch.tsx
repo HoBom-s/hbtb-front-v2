@@ -20,10 +20,14 @@ import { Nullable, Auth, Article } from "@/types";
 // utils
 import { SessionStorage, AUTH_KEY } from "@/utils";
 
+interface ArticleResponse {
+  allArticles: Article[];
+}
+
 export const AdminFetch = () => {
   const adminResult: Nullable<Auth> = useFetch<string, Nullable<Auth>>(
     get,
-    "/user/me",
+    "/api/v2/users",
     {
       headers: {
         Authorization: `Bearer ${SessionStorage.getItem(AUTH_KEY)}`,
@@ -31,10 +35,10 @@ export const AdminFetch = () => {
     },
   );
 
-  const articles: Nullable<Article[]> = useFetch<string, Nullable<Article[]>>(
-    get,
-    "article",
-  );
+  const articles: Nullable<ArticleResponse> = useFetch<
+    string,
+    Nullable<ArticleResponse>
+  >(get, "/api/v2/articles");
 
   if (!adminResult) {
     return <Flex></Flex>;
@@ -68,9 +72,9 @@ export const AdminFetch = () => {
         leftBg="rgb(234, 75, 100)"
         rightBg="rgb(234, 106, 127)"
         heading={String(
-          articles?.filter(
+          articles?.allArticles.filter(
             (article: Article) =>
-              article.writers[0].nickname === adminResult.nickname,
+              article.user.nickname === adminResult.nickname,
           ).length,
         )}
         subtitle="Articles"

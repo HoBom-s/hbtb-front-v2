@@ -125,12 +125,12 @@ const AdminPublishPage = () => {
   const handleTagItemClick = useCallback(
     (tag: Tag) => {
       const foundTag: Nullable<Tag> = clickedTag.find(
-        (cTag: Tag) => cTag._id === tag._id,
+        (cTag: Tag) => cTag.id === tag.id,
       );
 
       if (foundTag) {
         setClickedTag((prevClickedTag: Tag[]) =>
-          prevClickedTag.filter((cTag: Tag) => cTag._id !== tag._id),
+          prevClickedTag.filter((cTag: Tag) => cTag.id !== tag.id),
         );
       } else {
         setClickedTag((prevClickedTag: Tag[]) => [...prevClickedTag, tag]);
@@ -146,7 +146,7 @@ const AdminPublishPage = () => {
       return;
     }
 
-    const myInfo: Auth = await get("/user/me", {
+    const myInfo: Auth = await get("/api/v2/users", {
       headers: {
         Authorization: `Bearer ${SessionStorage.getItem(AUTH_KEY)}`,
       },
@@ -170,7 +170,7 @@ const AdminPublishPage = () => {
       },
     );
 
-    if (createdArticle._id) {
+    if (createdArticle.id) {
       navigate("/dashboard");
     } else {
       handleModalOpenStateChange();

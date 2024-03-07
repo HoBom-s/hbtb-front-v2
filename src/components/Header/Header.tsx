@@ -63,7 +63,9 @@ export const Header = () => {
 
   useEffect(() => {
     (async () => {
-      const article: ArticlePost = await get(`/article/find/${path}`);
+      const article: ArticlePost = await get(
+        `/api/v2/articles/search?keyword=${path || ""}`,
+      );
 
       const { pathname } = location;
 

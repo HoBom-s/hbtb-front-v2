@@ -33,8 +33,15 @@ import type { Tag, Nullable } from "@/types";
 // utils
 import { AUTH_KEY, SessionStorage } from "@/utils";
 
+interface TagResponse {
+  foundTags: Tag[];
+}
+
 export const AdminTagCategoryFetch = () => {
-  const tagResult: Nullable<Tag[]> = useFetch<string, Tag[]>(get, "/tag");
+  const tagResult: Nullable<TagResponse> = useFetch<string, TagResponse>(
+    get,
+    "/api/v2/tags",
+  );
   const { isModalOpen, handleModalOpenStateChange } = useModal();
   const confirmModal = useModal();
   const { formValue, isValidForm, handleFormValueChange, resetFormValue } =
@@ -62,7 +69,7 @@ export const AdminTagCategoryFetch = () => {
 
   useEffect(() => {
     if (tagResult) {
-      setRenderItems(tagResult);
+      setRenderItems(tagResult.foundTags);
     }
   }, [tagResult]);
 
@@ -70,7 +77,7 @@ export const AdminTagCategoryFetch = () => {
     (index: number) => {
       if (index === 0) {
         if (tagResult) {
-          setRenderItems(tagResult);
+          setRenderItems(tagResult.foundTags);
         }
       }
     },
@@ -97,15 +104,14 @@ export const AdminTagCategoryFetch = () => {
       return;
     }
 
-    const { _id, count } = selectedTag;
+    const { id, count } = selectedTag;
 
     const authToken: Nullable<string> = SessionStorage.getItem(AUTH_KEY);
 
     if (authToken) {
       const data: Tag = await patch(
-        "/tag/update",
+        `/api/v2/tags/${id}`,
         {
-          _id: _id,
           title: formValue.title.value,
           path: formValue.path.value,
           count: count,
@@ -117,7 +123,7 @@ export const AdminTagCategoryFetch = () => {
         },
       );
 
-      if (data._id) {
+      if (data.id) {
         const tagUpdateResult: Tag[] = await get("/tag");
 
         setSelectedTag(null);
@@ -133,9 +139,9 @@ export const AdminTagCategoryFetch = () => {
       return;
     }
 
-    const { _id } = selectedTag;
+    const { id } = selectedTag;
 
-    const data: Nullable<string> = await del(`/tag/delete/${_id}`, {
+    const data: Nullable<string> = await del(`/api/v2/tags/${id}`, {
       headers: {
         Authorization: `Bearer ${SessionStorage.getItem(AUTH_KEY)}`,
       },

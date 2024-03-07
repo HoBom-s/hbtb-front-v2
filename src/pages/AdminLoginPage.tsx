@@ -73,7 +73,7 @@ const AdminLoginPage = () => {
     const { username, password } = formValue;
 
     try {
-      const authResult: Auth = await post("/user/login", {
+      const authResult: Auth = await post("/api/v2/users/login", {
         nickname: username.value,
         password: password.value,
       });

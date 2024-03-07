@@ -48,8 +48,8 @@ export const AdminArticlesTable = ({ items }: AdminArticlesTableProps) => {
         </Thead>
         <Tbody>
           {items.map((item: Article) => (
-            <Tr key={item._id}>
-              <Td>{item.writers[0].nickname}</Td>
+            <Tr key={item.id}>
+              <Td>{item.user.nickname}</Td>
               <Td>{item.title}</Td>
               <Td>{item.subtitle}</Td>
               <Td>{item.path}</Td>
