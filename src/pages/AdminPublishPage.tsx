@@ -29,14 +29,17 @@ import {
 } from "@/components";
 
 // api
-import axios from "axios";
 import { get, post } from "@/apis";
 
 // utils
 import { SessionStorage, AUTH_KEY } from "@/utils";
 
 // types
-import type { Article, Auth, Nullable, Tag } from "@/types";
+import type { Article, Nullable, Tag } from "@/types";
+
+interface TagResponse {
+  foundTags: Tag[];
+}
 
 const AdminPublishPage = () => {
   const { formValue, isValidForm, handleFormValueChange } = useForm({
@@ -68,7 +71,10 @@ const AdminPublishPage = () => {
   const { isModalOpen, handleModalOpenStateChange } = useModal();
 
   const [contents, setContents] = useState<string | undefined>("");
-  const [fileValue, setFileValue] = useState<string>("");
+  const [fileValue, setFileValue] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | ArrayBuffer | null>(
+    null,
+  );
   const [tags, setTags] = useState<Tag[]>([]);
   const [clickedTag, setClickedTag] = useState<Tag[]>([]);
   const [isDesktopMode, setIsDesktopMode] = useState<boolean>(true);
@@ -79,9 +85,9 @@ const AdminPublishPage = () => {
 
   useEffect(() => {
     (async () => {
-      const tagResult: Tag[] = await get("/tag");
+      const tagResult: TagResponse = await get("/api/v2/tags");
 
-      setTags(tagResult);
+      setTags(tagResult.foundTags);
     })();
   }, []);
 
@@ -106,19 +112,14 @@ const AdminPublishPage = () => {
 
     if (target.files && target.files.length) {
       const file = target.files[0];
-      const formData = new FormData();
 
-      formData.append("file", file);
-      formData.append("upload_preset", import.meta.env.VITE_APP_CLOUD_PRESET);
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        setPreviewImage(reader.result);
+      };
 
-      const uploadResult = await axios.post(
-        `${import.meta.env.VITE_APP_CLOUDE_BASE_URL}/${
-          import.meta.env.VITE_APP_CLOUD_NAME
-        }/image/upload`,
-        formData,
-      );
-
-      setFileValue(uploadResult.data.secure_url);
+      setFileValue(file);
     }
   };
 
@@ -140,29 +141,34 @@ const AdminPublishPage = () => {
   );
 
   const handlePostButtonClick = async () => {
-    if (!fileValue || !isValidForm || !clickedTag.length) {
+    if (!fileValue || !isValidForm || !clickedTag.length || !contents?.length) {
       handleModalOpenStateChange();
 
       return;
     }
 
-    const myInfo: Auth = await get("/api/v2/users", {
-      headers: {
-        Authorization: `Bearer ${SessionStorage.getItem(AUTH_KEY)}`,
-      },
-    });
+    const formData = new FormData();
 
-    const createdArticle: Article = await post(
-      "/article/create",
-      {
-        thumbnail: fileValue,
-        title: formValue.title.value,
-        subtitle: formValue.subtitle.value,
-        contents: contents,
-        tags: clickedTag,
-        writers: [myInfo.nickname],
-        path: formValue.path.value,
-      },
+    const tagTitles = (() => {
+      const titles: string[] = [];
+
+      clickedTag.forEach((tag) => {
+        titles.push(tag.title);
+      });
+
+      return titles;
+    })();
+
+    formData.append("title", formValue.title.value);
+    formData.append("thumbnail", fileValue);
+    formData.append("subtitle", formValue.subtitle.value);
+    formData.append("contents", contents);
+    formData.append("tags", tagTitles.join(","));
+    formData.append("path", formValue.path.value);
+
+    const result: { createdArticle: Article } = await post(
+      "/api/v2/articles",
+      formData,
       {
         headers: {
           Authorization: `Bearer ${SessionStorage.getItem(AUTH_KEY)}`,
@@ -170,7 +176,7 @@ const AdminPublishPage = () => {
       },
     );
 
-    if (createdArticle.id) {
+    if (result.createdArticle.id) {
       navigate("/dashboard");
     } else {
       handleModalOpenStateChange();
@@ -229,7 +235,7 @@ const AdminPublishPage = () => {
               clickedTag={clickedTag}
               fileInputRef={fileInputRef}
               formValue={formValue}
-              fileValue={fileValue}
+              previewImage={previewImage}
               onTagItemClickEvent={handleTagItemClick}
               onTumbnailUploadClickEvent={handleTumbnailUploadClick}
               onFileInputChangeEvent={handleFileChange}
@@ -244,7 +250,7 @@ const AdminPublishPage = () => {
               clickedTag={clickedTag}
               fileInputRef={fileInputRef}
               formValue={formValue}
-              fileValue={fileValue}
+              previewImage={previewImage}
               onTagItemClickEvent={handleTagItemClick}
               onTumbnailUploadClickEvent={handleTumbnailUploadClick}
               onFileInputChangeEvent={handleFileChange}

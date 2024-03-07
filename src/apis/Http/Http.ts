@@ -9,7 +9,7 @@ import axios, {
 import type { HttpBase } from "./HttpBase";
 
 const RETRY_TIME_COUNT: number = 500;
-const AXIOS_TIMEOUT: number = 3000;
+const AXIOS_TIMEOUT: number = 5000;
 
 export class Http implements HttpBase {
   readonly _instance = Symbol.for("Http");

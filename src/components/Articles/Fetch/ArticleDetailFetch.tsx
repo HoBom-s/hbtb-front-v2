@@ -14,7 +14,7 @@ import {
 import { useFetch, useModal } from "@/hooks";
 
 // components
-import { ArticleDetail, CommonConfirmModal, CommonModal } from "@/components";
+import { ArticleDetail, CommonConfirmModal } from "@/components";
 
 // apis
 import { del, get } from "@/apis";
@@ -135,12 +135,6 @@ export const ArticleDetailFetch = ({ path }: ArticleDetailFetchProps) => {
         title="WARNING"
         contents="Are you sure delete this article ?"
         onModalOkButtonClickEvent={handleModalOkButtonClick}
-        onModalCloseButtonClickEvent={handleModalOpenStateChange}
-      />
-      <CommonModal
-        isOpen={isModalOpen}
-        title="WARNING"
-        bodyContents="Not implemented..."
         onModalCloseButtonClickEvent={handleModalOpenStateChange}
       />
     </Box>

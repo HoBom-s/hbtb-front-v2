@@ -24,23 +24,26 @@ interface ArticleResponse {
   allArticles: Article[];
 }
 
+interface AuthResponse {
+  foundUser: Auth;
+}
+
 export const AdminFetch = () => {
-  const adminResult: Nullable<Auth> = useFetch<string, Nullable<Auth>>(
-    get,
-    "/api/v2/users",
-    {
-      headers: {
-        Authorization: `Bearer ${SessionStorage.getItem(AUTH_KEY)}`,
-      },
+  const adminResult: Nullable<AuthResponse> = useFetch<
+    string,
+    Nullable<AuthResponse>
+  >(get, "/api/v2/users", {
+    headers: {
+      Authorization: `Bearer ${SessionStorage.getItem(AUTH_KEY)}`,
     },
-  );
+  });
 
   const articles: Nullable<ArticleResponse> = useFetch<
     string,
     Nullable<ArticleResponse>
   >(get, "/api/v2/articles");
 
-  if (!adminResult) {
+  if (!adminResult?.foundUser) {
     return <Flex></Flex>;
   }
 
@@ -55,7 +58,7 @@ export const AdminFetch = () => {
       <AdminCard
         leftBg="rgb(62, 81, 181)"
         rightBg="rgb(80, 100, 181)"
-        heading={adminResult.nickname as string}
+        heading={adminResult.foundUser.nickname as string}
         subtitle="My Account"
       >
         <FaUser color="white" />
@@ -63,7 +66,7 @@ export const AdminFetch = () => {
       <AdminCard
         leftBg="rgb(255, 166, 48)"
         rightBg="rgb(255, 160, 122)"
-        heading={adminResult.role as string}
+        heading={adminResult.foundUser.role as string}
         subtitle="Role"
       >
         <MdAdminPanelSettings color="white" />
@@ -74,7 +77,7 @@ export const AdminFetch = () => {
         heading={String(
           articles?.allArticles.filter(
             (article: Article) =>
-              article.user.nickname === adminResult.nickname,
+              article.user.nickname === adminResult.foundUser.nickname,
           ).length,
         )}
         subtitle="Articles"

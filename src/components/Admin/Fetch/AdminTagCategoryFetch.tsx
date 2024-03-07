@@ -37,6 +37,10 @@ interface TagResponse {
   foundTags: Tag[];
 }
 
+interface TagUpdateResponse {
+  updatedTag: Tag;
+}
+
 export const AdminTagCategoryFetch = () => {
   const tagResult: Nullable<TagResponse> = useFetch<string, TagResponse>(
     get,
@@ -104,17 +108,16 @@ export const AdminTagCategoryFetch = () => {
       return;
     }
 
-    const { id, count } = selectedTag;
+    const { id } = selectedTag;
 
     const authToken: Nullable<string> = SessionStorage.getItem(AUTH_KEY);
 
     if (authToken) {
-      const data: Tag = await patch(
+      const data: TagUpdateResponse = await patch(
         `/api/v2/tags/${id}`,
         {
           title: formValue.title.value,
           path: formValue.path.value,
-          count: count,
         },
         {
           headers: {
@@ -123,11 +126,11 @@ export const AdminTagCategoryFetch = () => {
         },
       );
 
-      if (data.id) {
-        const tagUpdateResult: Tag[] = await get("/tag");
+      if (data.updatedTag.id) {
+        const tagUpdateResult: TagResponse = await get("/api/v2/tags");
 
         setSelectedTag(null);
-        setRenderItems(tagUpdateResult);
+        setRenderItems(tagUpdateResult.foundTags);
 
         handleModalOpenStateChange();
       }
@@ -148,10 +151,10 @@ export const AdminTagCategoryFetch = () => {
     });
 
     if (data) {
-      const tagUpdateResult: Tag[] = await get("/tag");
+      const tagUpdateResult: TagResponse = await get("/api/v2/tags");
 
       setSelectedTag(null);
-      setRenderItems(tagUpdateResult);
+      setRenderItems(tagUpdateResult.foundTags);
 
       confirmModal.handleModalOpenStateChange();
     }
