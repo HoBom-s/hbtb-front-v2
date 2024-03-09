@@ -27,6 +27,7 @@ export class Http implements HttpBase {
       headers: {
         "Content-Type": "application/json",
       },
+      withCredentials: true,
     });
 
     this.fetcher.interceptors.request.use(
