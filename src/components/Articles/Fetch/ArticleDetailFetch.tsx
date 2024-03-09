@@ -14,7 +14,7 @@ import {
 import { useFetch, useModal } from "@/hooks";
 
 // components
-import { ArticleDetail, CommonConfirmModal, CommonModal } from "@/components";
+import { ArticleDetail, CommonConfirmModal } from "@/components";
 
 // apis
 import { del, get } from "@/apis";
@@ -29,11 +29,15 @@ interface ArticleDetailFetchProps {
   path: string;
 }
 
+interface ArticleResponse {
+  foundArticle: Article;
+}
+
 export const ArticleDetailFetch = ({ path }: ArticleDetailFetchProps) => {
-  const articleContentsResult: Nullable<Article> = useFetch<string, Article>(
-    get,
-    `/article/find/${path}`,
-  );
+  const articleContentsResult: Nullable<ArticleResponse> = useFetch<
+    string,
+    ArticleResponse
+  >(get, `/api/v2/articles/list/${path}`);
   const { isModalOpen, handleModalOpenStateChange } = useModal();
 
   const [articleId, setArticleId] = useState<string>("");
@@ -57,7 +61,7 @@ export const ArticleDetailFetch = ({ path }: ArticleDetailFetchProps) => {
   const handleModalOkButtonClick = async () => {
     if (articleId) {
       const deletedId: Nullable<string> = await del(
-        `/article/delete/${articleId}`,
+        `/api/v2/articles/${articleId}`,
         {
           headers: {
             Authorization: `Bearer ${SessionStorage.getItem(AUTH_KEY)}`,
@@ -75,13 +79,15 @@ export const ArticleDetailFetch = ({ path }: ArticleDetailFetchProps) => {
 
   return (
     <Box w="100%" h="100%" py="24px">
-      {articleContentsResult && (
+      {articleContentsResult && articleContentsResult.foundArticle && (
         <Box>
-          <Heading>{articleContentsResult.title}</Heading>
+          <Heading>{articleContentsResult.foundArticle.title}</Heading>
           <Box pt="22px" pb="30px" display="flex" alignItems="center" gap={4}>
-            <Text fontSize="lg">{articleContentsResult.subtitle}</Text>
+            <Text fontSize="lg">
+              {articleContentsResult.foundArticle.subtitle}
+            </Text>
             <Text as="sub">
-              {articleContentsResult.createdAt.split("T")[0]}
+              {articleContentsResult.foundArticle.createdAt.split("T")[0]}
             </Text>
             {SessionStorage.getItem(AUTH_KEY) && (
               <Breadcrumb>
@@ -90,7 +96,9 @@ export const ArticleDetailFetch = ({ path }: ArticleDetailFetchProps) => {
                     color="teal"
                     cursor="pointer"
                     onClick={() =>
-                      handleUpdateButtonClick(articleContentsResult.path)
+                      handleUpdateButtonClick(
+                        articleContentsResult.foundArticle.path,
+                      )
                     }
                   >
                     Edit
@@ -101,7 +109,9 @@ export const ArticleDetailFetch = ({ path }: ArticleDetailFetchProps) => {
                     color="red"
                     cursor="pointer"
                     onClick={() =>
-                      handleDeleteButtonClick(articleContentsResult._id)
+                      handleDeleteButtonClick(
+                        articleContentsResult.foundArticle.id,
+                      )
                     }
                   >
                     Delete
@@ -111,10 +121,12 @@ export const ArticleDetailFetch = ({ path }: ArticleDetailFetchProps) => {
             )}
           </Box>
           <ArticleDetail
-            contents={articleContentsResult.contents}
-            authorThumbnail={articleContentsResult.writers[0].profileImg}
-            authorNickname={articleContentsResult.writers[0].nickname}
-            authorIntroduction={articleContentsResult.writers[0].introduction}
+            contents={articleContentsResult.foundArticle.contents}
+            authorThumbnail={articleContentsResult.foundArticle.user.profileImg}
+            authorNickname={articleContentsResult.foundArticle.user.nickname}
+            authorIntroduction={
+              articleContentsResult.foundArticle.user.introduction
+            }
           />
         </Box>
       )}
@@ -123,12 +135,6 @@ export const ArticleDetailFetch = ({ path }: ArticleDetailFetchProps) => {
         title="WARNING"
         contents="Are you sure delete this article ?"
         onModalOkButtonClickEvent={handleModalOkButtonClick}
-        onModalCloseButtonClickEvent={handleModalOpenStateChange}
-      />
-      <CommonModal
-        isOpen={isModalOpen}
-        title="WARNING"
-        bodyContents="Not implemented..."
         onModalCloseButtonClickEvent={handleModalOpenStateChange}
       />
     </Box>

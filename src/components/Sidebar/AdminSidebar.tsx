@@ -65,7 +65,7 @@ export const AdminSidebar = () => {
     }
 
     const createdTag: Tag = await post(
-      "/tag/create",
+      "/api/v2/tags",
       {
         title: formValue.title.value,
         path: formValue.path.value,

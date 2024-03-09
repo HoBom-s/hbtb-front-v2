@@ -17,8 +17,15 @@ interface TagItemFetchProps {
   onTagItemClickEvent: (tag: Tag) => void;
 }
 
+interface TagResponse {
+  foundTags: Tag[];
+}
+
 export const TagItemFetch = ({ onTagItemClickEvent }: TagItemFetchProps) => {
-  const tagResult: Nullable<Tag[]> = useFetch<string, Tag[]>(get, "/tag");
+  const tagResult: Nullable<TagResponse> = useFetch<string, TagResponse>(
+    get,
+    "/api/v2/tags",
+  );
 
   return (
     <Box
@@ -36,7 +43,7 @@ export const TagItemFetch = ({ onTagItemClickEvent }: TagItemFetchProps) => {
       {tagResult && (
         <RenderProps
           className="tag-render-list"
-          items={tagResult}
+          items={tagResult.foundTags}
           render={(item: Tag) => {
             return (
               <TagItem tag={item} onTagItemClickEvent={onTagItemClickEvent} />

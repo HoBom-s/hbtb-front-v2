@@ -33,7 +33,7 @@ interface ArticleContentsEditorSideProps {
 
   formValue: Form;
 
-  fileValue: string;
+  previewImage: string | ArrayBuffer | null;
 
   onTagItemClickEvent: (tag: Tag) => void;
 
@@ -51,7 +51,7 @@ export const ArticleContentsEditorSide = ({
   clickedTag,
   fileInputRef,
   formValue,
-  fileValue,
+  previewImage,
   onTagItemClickEvent,
   onTumbnailUploadClickEvent,
   onFileInputChangeEvent,
@@ -116,7 +116,7 @@ export const ArticleContentsEditorSide = ({
                   <TagItem
                     tag={tag}
                     outlined={
-                      clickedTag.find((cTag: Tag) => cTag._id === tag._id)
+                      clickedTag.find((cTag: Tag) => cTag.id === tag.id)
                         ? false
                         : true
                     }
@@ -149,10 +149,10 @@ export const ArticleContentsEditorSide = ({
               UPLOAD
             </Button>
           </InputGroup>
-          {fileValue && (
+          {previewImage && (
             <Image
               mt="20px"
-              src={fileValue}
+              src={previewImage as string}
               loading="lazy"
               borderRadius="8px"
               boxSize="260px"

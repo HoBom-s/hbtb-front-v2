@@ -19,28 +19,40 @@ interface ArticleSearchFetchProps {
   searchKeyword: string;
 }
 
+interface ArticleSearchResponse {
+  foundArticles: Article[];
+}
+
+interface ArticleResponse {
+  allArticles: Article[];
+}
+
 export const ArticleSearchFetch = ({
   searchKeyword,
 }: ArticleSearchFetchProps) => {
-  const articleSearchResult: Nullable<Article[]> = useFetch<string, Article[]>(
+  const articleSearchResult: Nullable<ArticleSearchResponse> = useFetch<
+    string,
+    ArticleSearchResponse
+  >(get, `/api/v2/articles/search${searchKeyword}`);
+  const articles: Nullable<ArticleResponse> = useFetch<string, ArticleResponse>(
     get,
-    `/article/search${searchKeyword}`,
-  );
-  const articles: Nullable<Article[]> = useFetch<string, Article[]>(
-    get,
-    "/article",
+    "/api/v2/articles",
   );
 
-  const searched: Nullable<Article[]> = (() => {
-    if (articleSearchResult && articles && articleSearchResult.length === 0) {
-      return articles.filter((article: Article) =>
+  const searched = (() => {
+    if (
+      articleSearchResult &&
+      articles?.allArticles &&
+      articleSearchResult.foundArticles.length === 0
+    ) {
+      return articles.allArticles.filter((article: Article) =>
         article.tags.find(
           (tag: Tag) => tag.title === searchKeyword.split("=")[1],
         ),
       );
     }
 
-    return articleSearchResult;
+    return articleSearchResult?.foundArticles;
   })();
 
   const navigate = useNavigate();
@@ -72,8 +84,8 @@ export const ArticleSearchFetch = ({
                   thumbnail={item.thumbnail}
                   title={item.title}
                   subtitle={item.subtitle}
-                  authorNickname={item.writers[0].nickname}
-                  authorThumbnail={item.writers[0].profileImg}
+                  authorNickname={item.user.nickname}
+                  authorThumbnail={item.user.profileImg}
                   path={item.path}
                   onArticleCardClickEvent={handleArticleSearchCardClick}
                   createdAt={item.createdAt.split("T")[0]}

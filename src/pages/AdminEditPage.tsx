@@ -27,6 +27,10 @@ interface EditForm {
   [key: string]: string;
 }
 
+interface ArticleEditResponse {
+  foundArticle: Article;
+}
+
 const AdminEditPage = () => {
   const { state } = useLocation();
   const { path } = state;
@@ -42,15 +46,17 @@ const AdminEditPage = () => {
 
   useEffect(() => {
     (async () => {
-      const foundArticle: Nullable<Article> = await get(`/article/find${path}`);
+      const result: Nullable<ArticleEditResponse> = await get(
+        `/api/v2/articles/list${path}`,
+      );
 
-      if (foundArticle) {
-        setArticlePost(foundArticle);
+      if (result?.foundArticle) {
+        setArticlePost(result?.foundArticle);
         setFormValue({
-          title: foundArticle.title,
-          subtitle: foundArticle.subtitle,
+          title: result?.foundArticle.title,
+          subtitle: result?.foundArticle.subtitle,
         });
-        setContents(foundArticle.contents);
+        setContents(result?.foundArticle.contents);
       }
     })();
   }, [path]);
@@ -67,28 +73,21 @@ const AdminEditPage = () => {
   };
 
   const handleEditButtonClick = async () => {
-    if (articlePost?._id) {
+    if (articlePost?.id) {
       const authToken: Nullable<string> = SessionStorage.getItem(AUTH_KEY);
 
-      const { _id, thumbnail, tags, writers, path } = articlePost;
+      const { id } = articlePost;
 
-      await patch(
-        `/article/update/${_id}`,
-        {
-          thumbnail: thumbnail,
-          title: formValue.title,
-          subtitle: formValue.subtitle,
-          contents: contents,
-          tags: tags,
-          path: path,
-          writers: [writers[0].nickname],
+      const formData = new FormData();
+      formData.append("title", formValue.title);
+      formData.append("subtitle", formValue.subtitle);
+      formData.append("contents", contents as string);
+
+      await patch(`/api/v2/articles/${id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        },
-      );
+      });
 
       window.location.replace("/dashboard");
     }

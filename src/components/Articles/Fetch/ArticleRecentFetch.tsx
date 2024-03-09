@@ -15,10 +15,14 @@ import { get } from "@/apis";
 // types
 import type { Nullable, Article } from "@/types";
 
+interface ArticleResponse {
+  allArticles: Article[];
+}
+
 export const ArticleRecentFetch = () => {
-  const articles: Nullable<Article[]> = useFetch<string, Article[]>(
+  const articles: Nullable<ArticleResponse> = useFetch<string, ArticleResponse>(
     get,
-    "/article",
+    "/api/v2/articles",
   );
 
   const navigate = useNavigate();
@@ -46,17 +50,23 @@ export const ArticleRecentFetch = () => {
         },
       }}
     >
-      {articles && (
+      {articles && articles.allArticles && (
         <RenderProps
           className="article-cards"
-          items={articles.slice(0, 3)}
+          items={articles.allArticles
+            .sort((a, b) => {
+              if (a.createdAt < b.createdAt) return 1;
+              else if (a.createdAt > b.createdAt) return -1;
+              return 0;
+            })
+            .slice(0, 3)}
           render={(item: Article) => {
             return (
               <ArticleRecentCard
                 thumbnail={item.thumbnail}
                 title={item.title}
-                authorNickname={item.writers[0].nickname}
-                authorThumbnail={item.writers[0].profileImg}
+                authorNickname={item.user.nickname}
+                authorThumbnail={item.user.profileImg}
                 path={item.path}
                 createdAt={item.createdAt.split("T")[0]}
                 onArticleRecentCardClickEvent={handleArticleRecentCardClick}

@@ -47,6 +47,14 @@ interface ArticlePost {
   thumbnail: string;
 }
 
+interface ArticleResponse {
+  foundArticle: {
+    title: string;
+    subtitle: string;
+    thumbnail: string;
+  };
+}
+
 export const Header = () => {
   const [headerScrollPosition, setHeaderScrollPosition] = useState<number>(0);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
@@ -63,14 +71,16 @@ export const Header = () => {
 
   useEffect(() => {
     (async () => {
-      const article: ArticlePost = await get(`/article/find/${path}`);
+      const article: ArticleResponse = await get(
+        `/api/v2/articles/list/${path || ""}`,
+      );
 
       const { pathname } = location;
 
       const currentPath: string = pathname.split("/")[1];
 
       if (currentPath === "post") {
-        const { title, subtitle, thumbnail } = article;
+        const { title, subtitle, thumbnail } = article.foundArticle;
 
         setHeaderInformation({
           title: title,

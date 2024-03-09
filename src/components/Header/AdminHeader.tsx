@@ -13,6 +13,10 @@ import { Auth } from "@/types";
 // utils
 import { SessionStorage, AUTH_KEY } from "@/utils";
 
+interface AuthResponse {
+  foundUser: Auth;
+}
+
 export const AdminHeader = () => {
   const [adminAuth, setAdminAuth] = useState<Auth>();
 
@@ -20,19 +24,21 @@ export const AdminHeader = () => {
 
   useEffect(() => {
     (async () => {
-      const authInformation: Auth = await get("/user/me", {
+      const authInformation: AuthResponse = await get("/api/v2/users", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${SessionStorage.getItem(AUTH_KEY)}`,
         },
       });
 
-      setAdminAuth(authInformation);
+      setAdminAuth(authInformation.foundUser);
     })();
   }, []);
 
-  const handleLogoutButtonClick = () => {
+  const handleLogoutButtonClick = async () => {
     SessionStorage.clearAllItem();
+
+    await get("/api/v2/users/logout");
 
     navigate("/");
   };

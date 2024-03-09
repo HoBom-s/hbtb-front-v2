@@ -13,13 +13,21 @@ import { get } from "@/apis";
 // types
 import type { Article, Nullable } from "@/types";
 
+interface ArticleResponse {
+  allArticles: Article[];
+}
+
 export const AdminArticlesTableFetch = () => {
-  const articleResults: Nullable<Article[]> = useFetch<string, Article[]>(
-    get,
-    "/article",
-  );
+  const articleResults: Nullable<ArticleResponse> = useFetch<
+    string,
+    ArticleResponse
+  >(get, "/api/v2/articles");
 
   return (
-    <Box>{articleResults && <AdminArticlesTable items={articleResults} />}</Box>
+    <Box>
+      {articleResults && (
+        <AdminArticlesTable items={articleResults.allArticles} />
+      )}
+    </Box>
   );
 };

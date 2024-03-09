@@ -14,6 +14,10 @@ interface PrivateRouterProps {
   children: ChildrenAlias;
 }
 
+interface AuthResponse {
+  foundUser: Auth;
+}
+
 export const PrivateRouter = ({ children }: PrivateRouterProps) => {
   const navigate = useNavigate();
 
@@ -26,14 +30,14 @@ export const PrivateRouter = ({ children }: PrivateRouterProps) => {
       }
 
       try {
-        const authCheck: Auth = await get("/user/me", {
+        const authCheck: AuthResponse = await get("/api/v2/users", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
         });
 
-        if (!authCheck._id) {
+        if (!authCheck.foundUser.id) {
           navigate("/");
         }
       } catch (e: unknown) {
