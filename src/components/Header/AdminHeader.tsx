@@ -35,8 +35,10 @@ export const AdminHeader = () => {
     })();
   }, []);
 
-  const handleLogoutButtonClick = () => {
+  const handleLogoutButtonClick = async () => {
     SessionStorage.clearAllItem();
+
+    await get("/api/v2/users/logout");
 
     navigate("/");
   };
