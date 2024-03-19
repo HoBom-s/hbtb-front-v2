@@ -15,14 +15,24 @@ import { get } from "@/apis";
 // types
 import type { Nullable, Article } from "@/types";
 
-interface ArticleResponse {
-  allArticles: Article[];
+interface ArticleFetchResult {
+  articlesAndPageCount: {
+    foundArticles: Nullable<Article[]>;
+    totalPageCount: number;
+  };
 }
 
 export const ArticleRecentFetch = () => {
-  const articles: Nullable<ArticleResponse> = useFetch<string, ArticleResponse>(
+  const PAGE_NUMBER: number = 1;
+  const PER_PAGE: number = 3;
+  const SORTING: string = "desc";
+
+  const articles: Nullable<ArticleFetchResult> = useFetch<
+    string,
+    ArticleFetchResult
+  >(
     get,
-    "/api/v2/articles",
+    `/api/v2/articles/list?pageNumber=${PAGE_NUMBER}&perPage=${PER_PAGE}&sorting=${SORTING}`,
   );
 
   const navigate = useNavigate();
@@ -50,16 +60,10 @@ export const ArticleRecentFetch = () => {
         },
       }}
     >
-      {articles && articles.allArticles && (
+      {articles && (
         <RenderProps
           className="article-cards"
-          items={articles.allArticles
-            .sort((a, b) => {
-              if (a.createdAt < b.createdAt) return 1;
-              else if (a.createdAt > b.createdAt) return -1;
-              return 0;
-            })
-            .slice(0, 3)}
+          items={articles?.articlesAndPageCount?.foundArticles || []}
           render={(item: Article) => {
             return (
               <ArticleRecentCard

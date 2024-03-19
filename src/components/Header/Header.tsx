@@ -71,15 +71,15 @@ export const Header = () => {
 
   useEffect(() => {
     (async () => {
-      const article: ArticleResponse = await get(
-        `/api/v2/articles/list/${path || ""}`,
-      );
-
       const { pathname } = location;
 
       const currentPath: string = pathname.split("/")[1];
 
       if (currentPath === "post") {
+        const article: ArticleResponse = await get(
+          `/api/v2/articles/list/${path || ""}`,
+        );
+
         const { title, subtitle, thumbnail } = article.foundArticle;
 
         setHeaderInformation({

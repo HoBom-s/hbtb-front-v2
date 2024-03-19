@@ -19,9 +19,10 @@ export const RenderProps = <T,>({
 }: RendererProps<T>) => {
   return (
     <div className={className}>
-      {items.map((item: T, index: number) => (
-        <Box key={index}>{render(item)}</Box>
-      ))}
+      {items &&
+        items.map((item: T, index: number) => (
+          <Box key={index}>{render(item)}</Box>
+        ))}
     </div>
   );
 };
