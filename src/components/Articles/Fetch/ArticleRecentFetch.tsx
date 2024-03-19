@@ -60,7 +60,7 @@ export const ArticleRecentFetch = () => {
         },
       }}
     >
-      {articles && (
+      {articles && articles?.articlesAndPageCount && (
         <RenderProps
           className="article-cards"
           items={articles?.articlesAndPageCount?.foundArticles || []}

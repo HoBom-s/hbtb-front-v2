@@ -30,14 +30,10 @@ export const useFetch = <Params extends string, FetchResult>(
 
   const { throwAsyncError } = useThrowAsyncError();
 
-  const resolve = useCallback(
-    (result: FetchResult) => {
-      _setStatus("fulfilled");
-      _setResult(result);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [params],
-  );
+  const resolve = useCallback((result: FetchResult) => {
+    _setStatus("fulfilled");
+    _setResult(result);
+  }, []);
 
   useEffect(() => {
     _setStatus("pending");

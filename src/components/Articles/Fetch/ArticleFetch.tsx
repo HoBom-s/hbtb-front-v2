@@ -78,7 +78,7 @@ export const ArticleFetch = () => {
         },
       }}
     >
-      {articlesResult && (
+      {articlesResult && articlesResult?.articlesAndPageCount && (
         <RenderProps
           className="article-render-list"
           items={articlesResult?.articlesAndPageCount.foundArticles || []}
@@ -103,7 +103,7 @@ export const ArticleFetch = () => {
           <Paginator
             curPageNumber={curPageNumber}
             totalPageNumber={
-              articlesResult?.articlesAndPageCount.totalPageCount
+              articlesResult?.articlesAndPageCount?.totalPageCount
             }
             onBackButtonClickEvent={handleBackButtonClick}
             onFowardButtonClickEvent={handleFowardButtonClick}
